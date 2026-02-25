@@ -15,7 +15,7 @@ export default function EditBrandPage({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <span className="font-body text-sm text-[#888]">로딩 중...</span>
+        <span className="font-body text-sm text-text-muted">로딩 중...</span>
       </div>
     );
   }
@@ -23,7 +23,7 @@ export default function EditBrandPage({
   if (isError || !brand) {
     return (
       <div className="flex items-center justify-center py-20">
-        <span className="font-body text-sm text-[#999]">
+        <span className="font-body text-sm text-text-placeholder">
           브랜드를 찾을 수 없습니다
         </span>
       </div>

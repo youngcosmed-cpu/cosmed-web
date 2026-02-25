@@ -17,7 +17,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
       <button
         className={`font-body text-sm font-light bg-transparent border-none py-2 px-0 cursor-pointer relative tracking-[0.01em] transition-colors max-md:text-[13px] max-md:py-1.5 ${
           selected === undefined
-            ? 'text-deep-charcoal font-normal after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-deep-charcoal'
+            ? 'text-primary font-normal after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary'
             : 'text-text-muted hover:text-text-secondary'
         }`}
         onClick={() => onSelect(undefined)}
@@ -29,7 +29,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
           key={cat.id}
           className={`font-body text-sm font-light bg-transparent border-none py-2 px-0 cursor-pointer relative tracking-[0.01em] transition-colors max-md:text-[13px] max-md:py-1.5 ${
             selected === cat.id
-              ? 'text-deep-charcoal font-normal after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-deep-charcoal'
+              ? 'text-primary font-normal after:absolute after:bottom-0 after:left-0 after:w-full after:h-px after:bg-primary'
               : 'text-text-muted hover:text-text-secondary'
           }`}
           onClick={() => onSelect(cat.id)}

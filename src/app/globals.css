@@ -1,16 +1,45 @@
 @import "tailwindcss";
 
 @theme {
-  --color-deep-charcoal: #0F0F10;
-  --color-warm-gray: #EDEDED;
-  --color-cool-gray: #C9CBD1;
+  /* Core Brand */
+  --color-primary: #0F0F10;
+  --color-primary-hover: #2A2A2B;
   --color-beige: #D8CFC4;
+  --color-beige-hover: #CFC5B8;
   --color-olive: #9FA7A0;
-  --color-body-bg: #F5F2EF;
-  --color-border: #E0E0E0;
+  --color-cool-gray: #C9CBD1;
+  --color-warm-gray: #EDEDED;
+
+  /* Text */
   --color-text-primary: #0F0F10;
+  --color-text-strong: #555555;
   --color-text-secondary: #5A5A5C;
+  --color-text-label: #666666;
   --color-text-muted: #8A8A8D;
+  --color-text-placeholder: #999999;
+  --color-text-disabled: #BBBBBB;
+
+  /* Admin */
+  --color-admin-dark: #1A1A1A;
+  --color-admin-dark-hover: #333333;
+  --color-admin-nav: #CCCCCC;
+
+  /* Borders */
+  --color-border: #E0E0E0;
+  --color-border-strong: #D0D0D0;
+  --color-border-medium: #CCCCCC;
+  --color-border-light: #E8E8E8;
+
+  /* Backgrounds */
+  --color-body-bg: #F5F2EF;
+  --color-bg-admin: #F8F8F8;
+  --color-bg-input: #FAFAFA;
+  --color-bg-light: #F5F5F5;
+  --color-bg-muted: #F0F0F0;
+
+  /* Status */
+  --color-error: #E53935;
+
   --font-display: 'Manrope', 'Inter', -apple-system, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
   --breakpoint-sm: 768px;

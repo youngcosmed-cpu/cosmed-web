@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="bg-deep-charcoal border-t border-white/[0.08] pt-15 pb-10">
+    <footer className="bg-primary border-t border-white/[0.08] pt-15 pb-10">
       <div className="max-w-[1400px] mx-auto px-15 max-md:px-6 max-[992px]:px-10">
         {/* Top */}
         <div className="flex justify-between items-start max-md:flex-col max-md:gap-6">

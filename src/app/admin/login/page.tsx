@@ -50,22 +50,22 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F8F8]">
+    <div className="min-h-screen flex flex-col bg-bg-admin">
       <Header minimal />
       <div className="flex-1 flex items-center justify-center px-4">
       <div className="w-full max-w-[400px]">
         <div className="text-center mb-8">
-          <h1 className="font-display text-2xl font-bold text-[#1A1A1A]">
+          <h1 className="font-display text-2xl font-bold text-admin-dark">
             관리자 로그인
           </h1>
-          <p className="mt-2 font-body text-sm text-[#888]">
+          <p className="mt-2 font-body text-sm text-text-muted">
             Young Cosmed 관리자 대시보드
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl p-8 shadow-sm border border-[#E8E8E8]"
+          className="bg-white rounded-xl p-8 shadow-sm border border-border-light"
         >
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-body">
@@ -76,7 +76,7 @@ function LoginForm() {
           <div className="mb-4">
             <label
               htmlFor="email"
-              className="block font-body text-sm font-semibold text-[#1A1A1A] mb-1.5"
+              className="block font-body text-sm font-semibold text-admin-dark mb-1.5"
             >
               이메일
             </label>
@@ -87,7 +87,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full px-4 py-3 rounded-lg border border-[#DDD] font-body text-sm text-[#1A1A1A] placeholder-[#BBB] focus:outline-none focus:border-[#1A1A1A] transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-border-strong font-body text-sm text-admin-dark placeholder-text-disabled focus:outline-none focus:border-admin-dark transition-colors"
               placeholder="admin@cosmed.com"
             />
           </div>
@@ -95,7 +95,7 @@ function LoginForm() {
           <div className="mb-6">
             <label
               htmlFor="password"
-              className="block font-body text-sm font-semibold text-[#1A1A1A] mb-1.5"
+              className="block font-body text-sm font-semibold text-admin-dark mb-1.5"
             >
               비밀번호
             </label>
@@ -106,7 +106,7 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full px-4 py-3 rounded-lg border border-[#DDD] font-body text-sm text-[#1A1A1A] placeholder-[#BBB] focus:outline-none focus:border-[#1A1A1A] transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-border-strong font-body text-sm text-admin-dark placeholder-text-disabled focus:outline-none focus:border-admin-dark transition-colors"
               placeholder="비밀번호를 입력하세요"
             />
           </div>
@@ -114,7 +114,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-lg bg-[#1A1A1A] text-white font-body text-sm font-semibold hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 rounded-lg bg-admin-dark text-white font-body text-sm font-semibold hover:bg-admin-dark-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? '로그인 중...' : '로그인'}
           </button>
@@ -122,7 +122,7 @@ function LoginForm() {
           <div className="mt-4 text-center">
             <Link
               href="/admin/reset-password"
-              className="font-body text-sm text-[#888] hover:text-[#1A1A1A] transition-colors no-underline"
+              className="font-body text-sm text-text-muted hover:text-admin-dark transition-colors no-underline"
             >
               비밀번호를 잊으셨나요?
             </Link>

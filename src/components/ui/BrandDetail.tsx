@@ -62,7 +62,7 @@ export function BrandDetail({ id }: { id: number }) {
         {/* Back Button */}
         <button
           onClick={() => router.back()}
-          className="group/back inline-flex items-center gap-2.5 bg-transparent border-none font-body text-[13px] font-normal text-[#666] cursor-pointer py-3 mb-10 tracking-[0.02em] transition-all duration-300 hover:text-[#1a1a1a] max-md:mb-5 max-md:text-sm"
+          className="group/back inline-flex items-center gap-2.5 bg-transparent border-none font-body text-[13px] font-normal text-text-label cursor-pointer py-3 mb-10 tracking-[0.02em] transition-all duration-300 hover:text-admin-dark max-md:mb-5 max-md:text-sm"
         >
           <svg
             viewBox="0 0 24 24"
@@ -81,10 +81,10 @@ export function BrandDetail({ id }: { id: number }) {
         <header
           className={`mb-12 transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] max-[992px]:mb-8 max-md:mb-6 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
         >
-          <span className="inline-block font-body text-[13px] font-semibold tracking-[0.2em] uppercase text-[#1a1a1a] bg-[#F5F5F3] px-5 py-2.5 mb-4 max-md:text-xs max-md:px-4 max-md:py-2 max-md:mb-4">
+          <span className="inline-block font-body text-[13px] font-semibold tracking-[0.2em] uppercase text-admin-dark bg-bg-light px-5 py-2.5 mb-4 max-md:text-xs max-md:px-4 max-md:py-2 max-md:mb-4">
             {brand.category.name}
           </span>
-          <h1 className="font-display text-[56px] font-bold tracking-[-0.03em] leading-[1.05] text-[#1a1a1a] max-lg:text-5xl max-[992px]:text-[44px] max-md:text-4xl max-[480px]:text-[32px]">
+          <h1 className="font-display text-[56px] font-bold tracking-[-0.03em] leading-[1.05] text-admin-dark max-lg:text-5xl max-[992px]:text-[44px] max-md:text-4xl max-[480px]:text-[32px]">
             {brand.name}
           </h1>
         </header>
@@ -95,7 +95,7 @@ export function BrandDetail({ id }: { id: number }) {
           <div
             className={`sticky top-10 transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] max-[992px]:static max-[992px]:top-0 max-[992px]:max-w-[480px] max-[992px]:mx-auto max-[992px]:w-full ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
           >
-            <div className="bg-[#F5F5F3] aspect-square overflow-hidden relative group/img">
+            <div className="bg-bg-light aspect-square overflow-hidden relative group/img">
               {brand.imageUrl ? (
                 <Image
                   src={brand.imageUrl}
@@ -120,10 +120,10 @@ export function BrandDetail({ id }: { id: number }) {
             <div className="flex flex-col h-full">
               {/* Selector Header */}
               <div className="mb-8 max-md:mb-6">
-                <h2 className="font-display text-2xl font-bold text-[#1a1a1a] mb-2 tracking-[-0.02em] max-[992px]:text-[22px] max-md:text-xl">
+                <h2 className="font-display text-2xl font-bold text-admin-dark mb-2 tracking-[-0.02em] max-[992px]:text-[22px] max-md:text-xl">
                   Select Product Variants
                 </h2>
-                <p className="text-[15px] text-[#888]">
+                <p className="text-[15px] text-text-muted">
                   Choose one or more products for your inquiry
                 </p>
               </div>
@@ -139,16 +139,16 @@ export function BrandDetail({ id }: { id: number }) {
                         onClick={() => handleProductToggle(product.id)}
                         className={`flex items-center gap-4 px-6 py-5 cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] border-2 max-md:px-[18px] max-md:py-4 max-[480px]:gap-3 max-[480px]:px-4 max-[480px]:py-3.5 ${
                           isSelected
-                            ? 'bg-white border-[#1a1a1a]'
-                            : 'bg-[#FAFAFA] border-transparent hover:bg-[#F0F0EE] hover:border-[#ddd]'
+                            ? 'bg-white border-admin-dark'
+                            : 'bg-bg-input border-transparent hover:bg-bg-muted hover:border-border-strong'
                         }`}
                       >
                         {/* Checkbox */}
                         <div
                           className={`w-[26px] h-[26px] border-2 flex items-center justify-center shrink-0 transition-all duration-300 ${
                             isSelected
-                              ? 'bg-[#1a1a1a] border-[#1a1a1a]'
-                              : 'border-[#ccc]'
+                              ? 'bg-admin-dark border-admin-dark'
+                              : 'border-border-medium'
                           }`}
                         >
                           <span
@@ -162,11 +162,11 @@ export function BrandDetail({ id }: { id: number }) {
 
                         {/* Variant Info */}
                         <div className="flex flex-col gap-1 flex-1">
-                          <span className="text-[17px] font-semibold text-[#1a1a1a] max-md:text-[15px] max-[480px]:text-sm">
+                          <span className="text-[17px] font-semibold text-admin-dark max-md:text-[15px] max-[480px]:text-sm">
                             {product.name}
                           </span>
                           {product.description && (
-                            <span className="text-sm text-[#888] leading-[1.4] max-md:text-[13px] max-[480px]:text-xs">
+                            <span className="text-sm text-text-muted leading-[1.4] max-md:text-[13px] max-[480px]:text-xs">
                               {product.description}
                             </span>
                           )}
@@ -175,16 +175,16 @@ export function BrandDetail({ id }: { id: number }) {
                     );
                   })
                 ) : (
-                  <p className="text-[15px] text-[#888] py-4">
+                  <p className="text-[15px] text-text-muted py-4">
                     No product variants available.
                   </p>
                 )}
               </div>
 
               {/* CTA Section */}
-              <div className="mt-8 pt-8 border-t border-[#e8e8e8] max-md:mt-6 max-md:pt-6">
+              <div className="mt-8 pt-8 border-t border-border-light max-md:mt-6 max-md:pt-6">
                 {selectedProducts.length > 0 && (
-                  <span className="inline-block text-[13px] font-semibold text-white bg-[#1a1a1a] px-4 py-2 mb-4">
+                  <span className="inline-block text-[13px] font-semibold text-white bg-admin-dark px-4 py-2 mb-4">
                     {selectedProducts.length} selected
                   </span>
                 )}
@@ -195,8 +195,8 @@ export function BrandDetail({ id }: { id: number }) {
                   }}
                   className={`w-full inline-flex items-center justify-center gap-4 text-lg font-semibold tracking-[0.01em] px-16 py-6 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] no-underline max-md:px-8 max-md:py-5 max-md:text-[15px] ${
                     selectedProducts.length > 0
-                      ? 'bg-[#1a1a1a] text-white cursor-pointer hover:bg-black hover:-translate-y-[3px] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)]'
-                      : 'bg-[#bbb] text-white cursor-not-allowed'
+                      ? 'bg-admin-dark text-white cursor-pointer hover:bg-black hover:-translate-y-[3px] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)]'
+                      : 'bg-text-disabled text-white cursor-not-allowed'
                   }`}
                 >
                   <span>Discuss Wholesale Terms</span>
@@ -211,7 +211,7 @@ export function BrandDetail({ id }: { id: number }) {
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
                 </a>
-                <p className="text-base font-normal text-[#888] text-center max-w-[450px] mx-auto leading-[1.5] mt-3 max-md:text-sm">
+                <p className="text-base font-normal text-text-muted text-center max-w-[450px] mx-auto leading-[1.5] mt-3 max-md:text-sm">
                   Ask about pricing, MOQ, certifications and global shipping.
                 </p>
               </div>
@@ -220,7 +220,7 @@ export function BrandDetail({ id }: { id: number }) {
         </section>
 
         {/* Details Section */}
-        <section className="py-20 border-t border-[#e8e8e8] max-[992px]:py-14 max-md:py-12">
+        <section className="py-20 border-t border-border-light max-[992px]:py-14 max-md:py-12">
           <div className="max-w-[1000px] mx-auto">
             {/* Certification Badges */}
             {(brand.certifications.length > 0) && (
@@ -228,13 +228,13 @@ export function BrandDetail({ id }: { id: number }) {
                 {brand.certifications.map((cert, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center justify-center font-body text-[13px] font-semibold tracking-[0.04em] text-[#1a1a1a] px-6 py-3 bg-transparent border-[1.5px] border-[#1a1a1a] transition-all duration-300 hover:bg-[#1a1a1a] hover:text-white max-md:text-xs max-md:px-[18px] max-md:py-2.5"
+                    className="inline-flex items-center justify-center font-body text-[13px] font-semibold tracking-[0.04em] text-admin-dark px-6 py-3 bg-transparent border-[1.5px] border-admin-dark transition-all duration-300 hover:bg-admin-dark hover:text-white max-md:text-xs max-md:px-[18px] max-md:py-2.5"
                   >
                     {cert}
                   </span>
                 ))}
                 {/* Medical license badge — shown for all brands in this B2B medical context */}
-                <span className="inline-flex items-center gap-2 font-body text-[13px] font-medium tracking-[0.02em] text-[#666] px-6 py-3 bg-[#F5F5F3] max-md:text-xs max-md:px-[18px] max-md:py-2.5">
+                <span className="inline-flex items-center gap-2 font-body text-[13px] font-medium tracking-[0.02em] text-text-label px-6 py-3 bg-bg-light max-md:text-xs max-md:px-[18px] max-md:py-2.5">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
@@ -246,7 +246,7 @@ export function BrandDetail({ id }: { id: number }) {
             {/* Brand Description */}
             {brand.description && (
               <div className="max-w-[800px] mx-auto mb-16 text-center max-[992px]:mb-12 max-md:mb-10 max-md:text-left">
-                <p className="text-xl font-normal leading-[1.8] text-[#555] max-[992px]:text-lg max-md:text-base">
+                <p className="text-xl font-normal leading-[1.8] text-text-strong max-[992px]:text-lg max-md:text-base">
                   {brand.description}
                 </p>
               </div>
@@ -255,24 +255,24 @@ export function BrandDetail({ id }: { id: number }) {
         </section>
 
         {/* Reviews Section */}
-        <section className="py-25 border-t border-[#e8e8e8] bg-gradient-to-b from-[#FAFAFA] to-[#F5F5F3] -mx-15 px-15 max-lg:-mx-10 max-lg:px-10 max-md:-mx-5 max-md:px-5 max-[992px]:py-[72px] max-md:py-16">
+        <section className="py-25 border-t border-border-light bg-gradient-to-b from-bg-input to-bg-light -mx-15 px-15 max-lg:-mx-10 max-lg:px-10 max-md:-mx-5 max-md:px-5 max-[992px]:py-[72px] max-md:py-16">
           <div className="max-w-[1100px] mx-auto">
             {/* Reviews Header */}
             <div className="text-center mb-14 max-md:mb-10">
-              <span className="inline-block font-body text-xs font-semibold tracking-[0.2em] uppercase text-[#888] mb-4 max-md:text-[11px]">
+              <span className="inline-block font-body text-xs font-semibold tracking-[0.2em] uppercase text-text-muted mb-4 max-md:text-[11px]">
                 REVIEWS
               </span>
-              <h2 className="font-display text-4xl font-bold text-[#1a1a1a] mb-3 tracking-[-0.02em] max-[992px]:text-[32px] max-md:text-[28px] max-[480px]:text-2xl">
+              <h2 className="font-display text-4xl font-bold text-admin-dark mb-3 tracking-[-0.02em] max-[992px]:text-[32px] max-md:text-[28px] max-[480px]:text-2xl">
                 Customer Reviews
               </h2>
-              <p className="text-[17px] text-[#666] font-normal max-md:text-[15px]">
+              <p className="text-[17px] text-text-label font-normal max-md:text-[15px]">
                 Real feedback from our valued partners
               </p>
             </div>
 
             {/* No reviews state */}
             <div className="flex flex-col items-center justify-center py-20 px-8 bg-white text-center max-md:py-14 max-md:px-6">
-              <div className="w-[72px] h-[72px] flex items-center justify-center text-[#ddd] mb-6 max-md:w-14 max-md:h-14">
+              <div className="w-[72px] h-[72px] flex items-center justify-center text-border-strong mb-6 max-md:w-14 max-md:h-14">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -285,7 +285,7 @@ export function BrandDetail({ id }: { id: number }) {
                   <line x1="9" y1="13" x2="12" y2="13" />
                 </svg>
               </div>
-              <p className="text-[15px] text-[#999] max-w-[320px] leading-[1.6] max-md:text-sm">
+              <p className="text-[15px] text-text-placeholder max-w-[320px] leading-[1.6] max-md:text-sm">
                 No reviews yet. Be the first to share your experience!
               </p>
             </div>

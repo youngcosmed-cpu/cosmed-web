@@ -9,7 +9,7 @@ interface BrandCardProps {
 export function BrandCard({ brand }: BrandCardProps) {
   return (
     <Link href={`/brands/${brand.id}`} className="group cursor-pointer no-underline">
-      <div className="relative aspect-[4/5] bg-[#FAFAFA] overflow-hidden">
+      <div className="relative aspect-[4/5] bg-bg-input overflow-hidden">
         {brand.imageUrl ? (
           <Image
             src={brand.imageUrl}
@@ -25,7 +25,7 @@ export function BrandCard({ brand }: BrandCardProps) {
         )}
       </div>
       <div className="py-4 max-md:py-3">
-        <h3 className="font-display text-sm font-normal text-deep-charcoal">
+        <h3 className="font-display text-sm font-normal text-primary">
           {brand.name}
         </h3>
       </div>

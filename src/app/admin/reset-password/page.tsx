@@ -31,9 +31,9 @@ function RequestForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl p-8 shadow-sm border border-[#E8E8E8]"
+      className="bg-white rounded-xl p-8 shadow-sm border border-border-light"
     >
-      <p className="mb-4 font-body text-sm text-[#666]">
+      <p className="mb-4 font-body text-sm text-text-label">
         가입한 이메일 주소를 입력하면 비밀번호 재설정 링크를 보내드립니다.
       </p>
 
@@ -52,7 +52,7 @@ function RequestForm() {
       <div className="mb-6">
         <label
           htmlFor="email"
-          className="block font-body text-sm font-semibold text-[#1A1A1A] mb-1.5"
+          className="block font-body text-sm font-semibold text-admin-dark mb-1.5"
         >
           이메일
         </label>
@@ -63,7 +63,7 @@ function RequestForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           autoComplete="email"
-          className="w-full px-4 py-3 rounded-lg border border-[#DDD] font-body text-sm text-[#1A1A1A] placeholder-[#BBB] focus:outline-none focus:border-[#1A1A1A] transition-colors"
+          className="w-full px-4 py-3 rounded-lg border border-border-strong font-body text-sm text-admin-dark placeholder-text-disabled focus:outline-none focus:border-admin-dark transition-colors"
           placeholder="admin@cosmed.com"
         />
       </div>
@@ -71,7 +71,7 @@ function RequestForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-3 rounded-lg bg-[#1A1A1A] text-white font-body text-sm font-semibold hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full py-3 rounded-lg bg-admin-dark text-white font-body text-sm font-semibold hover:bg-admin-dark-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? '발송 중...' : '재설정 링크 보내기'}
       </button>
@@ -123,7 +123,7 @@ function ConfirmForm({ token }: { token: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl p-8 shadow-sm border border-[#E8E8E8]"
+      className="bg-white rounded-xl p-8 shadow-sm border border-border-light"
     >
       {message && (
         <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm font-body">
@@ -150,7 +150,7 @@ function ConfirmForm({ token }: { token: string }) {
           <div className="mb-4">
             <label
               htmlFor="newPassword"
-              className="block font-body text-sm font-semibold text-[#1A1A1A] mb-1.5"
+              className="block font-body text-sm font-semibold text-admin-dark mb-1.5"
             >
               새 비밀번호
             </label>
@@ -161,7 +161,7 @@ function ConfirmForm({ token }: { token: string }) {
               onChange={(e) => setNewPassword(e.target.value)}
               required
               autoComplete="new-password"
-              className="w-full px-4 py-3 rounded-lg border border-[#DDD] font-body text-sm text-[#1A1A1A] placeholder-[#BBB] focus:outline-none focus:border-[#1A1A1A] transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-border-strong font-body text-sm text-admin-dark placeholder-text-disabled focus:outline-none focus:border-admin-dark transition-colors"
               placeholder="8자 이상, 영문자 + 숫자 포함"
             />
           </div>
@@ -169,7 +169,7 @@ function ConfirmForm({ token }: { token: string }) {
           <div className="mb-6">
             <label
               htmlFor="confirmPassword"
-              className="block font-body text-sm font-semibold text-[#1A1A1A] mb-1.5"
+              className="block font-body text-sm font-semibold text-admin-dark mb-1.5"
             >
               비밀번호 확인
             </label>
@@ -180,7 +180,7 @@ function ConfirmForm({ token }: { token: string }) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               autoComplete="new-password"
-              className="w-full px-4 py-3 rounded-lg border border-[#DDD] font-body text-sm text-[#1A1A1A] placeholder-[#BBB] focus:outline-none focus:border-[#1A1A1A] transition-colors"
+              className="w-full px-4 py-3 rounded-lg border border-border-strong font-body text-sm text-admin-dark placeholder-text-disabled focus:outline-none focus:border-admin-dark transition-colors"
               placeholder="비밀번호를 다시 입력하세요"
             />
           </div>
@@ -188,7 +188,7 @@ function ConfirmForm({ token }: { token: string }) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-lg bg-[#1A1A1A] text-white font-body text-sm font-semibold hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 rounded-lg bg-admin-dark text-white font-body text-sm font-semibold hover:bg-admin-dark-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isLoading ? '변경 중...' : '비밀번호 변경'}
           </button>
@@ -203,10 +203,10 @@ function ResetPasswordContent() {
   const token = searchParams.get('token');
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8F8F8] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-bg-admin px-4">
       <div className="w-full max-w-[400px]">
         <div className="text-center mb-8">
-          <h1 className="font-display text-2xl font-bold text-[#1A1A1A]">
+          <h1 className="font-display text-2xl font-bold text-admin-dark">
             비밀번호 재설정
           </h1>
         </div>
@@ -216,7 +216,7 @@ function ResetPasswordContent() {
         <div className="mt-6 text-center">
           <Link
             href="/admin/login"
-            className="font-body text-sm text-[#888] hover:text-[#1A1A1A] transition-colors no-underline"
+            className="font-body text-sm text-text-muted hover:text-admin-dark transition-colors no-underline"
           >
             ← 로그인으로 돌아가기
           </Link>

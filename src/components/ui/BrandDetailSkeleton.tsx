@@ -22,17 +22,17 @@ export function BrandDetailSkeleton() {
             <div className="h-4 w-72 bg-warm-gray rounded mb-8 animate-pulse" />
             <div className="flex flex-col gap-3">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-[72px] bg-[#FAFAFA] animate-pulse" />
+                <div key={i} className="h-[72px] bg-bg-input animate-pulse" />
               ))}
             </div>
-            <div className="mt-8 pt-8 border-t border-[#e8e8e8]">
+            <div className="mt-8 pt-8 border-t border-border-light">
               <div className="h-[66px] bg-warm-gray rounded animate-pulse" />
             </div>
           </div>
         </div>
 
         {/* Details section skeleton */}
-        <div className="py-20 border-t border-[#e8e8e8] mt-0 max-md:py-12">
+        <div className="py-20 border-t border-border-light mt-0 max-md:py-12">
           <div className="max-w-[1000px] mx-auto">
             <div className="flex justify-center gap-3 mb-10">
               {Array.from({ length: 3 }).map((_, i) => (

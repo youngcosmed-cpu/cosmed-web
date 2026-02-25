@@ -51,7 +51,7 @@ export function BrandGrid() {
           />
           <a
             href="mailto:wholesale@youngcosmed.com"
-            className="inline-flex items-center gap-2 font-body text-[13px] font-normal text-white tracking-[0.02em] px-6 py-3 bg-deep-charcoal border-none cursor-pointer hover:bg-[#1a1a1b] transition-all no-underline max-md:px-[18px] max-md:py-2.5 max-md:text-xs"
+            className="inline-flex items-center gap-2 font-body text-[13px] font-normal text-white tracking-[0.02em] px-6 py-3 bg-primary border-none cursor-pointer hover:bg-admin-dark transition-all no-underline max-md:px-[18px] max-md:py-2.5 max-md:text-xs"
           >
             <span>Request Bulk Pricing</span>
             <span className="text-sm transition-transform group-hover:translate-x-[3px]">→</span>

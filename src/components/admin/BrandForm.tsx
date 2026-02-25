@@ -127,7 +127,7 @@ export function BrandForm({ brand }: Props) {
         {/* Back button */}
         <button
           onClick={() => router.push('/admin/brands')}
-          className="mb-6 font-body text-sm font-semibold text-[#666] hover:text-[#1A1A1A] transition-colors cursor-pointer bg-transparent border-none"
+          className="mb-6 font-body text-sm font-semibold text-text-label hover:text-admin-dark transition-colors cursor-pointer bg-transparent border-none"
         >
           &larr; 뒤로
         </button>
@@ -136,15 +136,15 @@ export function BrandForm({ brand }: Props) {
         <div className="mb-8 flex items-center gap-3">
           {isEdit && brand ? (
             <>
-              <span className="rounded-md bg-[#1A1A1A] px-3 py-1 font-body text-xs font-semibold text-white">
+              <span className="rounded-md bg-admin-dark px-3 py-1 font-body text-xs font-semibold text-white">
                 {brand.category?.name}
               </span>
-              <span className="font-display text-[22px] font-bold text-[#1A1A1A]">
+              <span className="font-display text-[22px] font-bold text-admin-dark">
                 {brand.name} 수정 중
               </span>
             </>
           ) : (
-            <span className="font-display text-[22px] font-bold text-[#1A1A1A]">
+            <span className="font-display text-[22px] font-bold text-admin-dark">
               새 제품 등록
             </span>
           )}
@@ -154,7 +154,7 @@ export function BrandForm({ brand }: Props) {
         <div className="flex flex-col gap-8">
           {/* Category */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               카테고리
             </label>
             {errors.category && (
@@ -175,8 +175,8 @@ export function BrandForm({ brand }: Props) {
                   }}
                   className={`rounded-[10px] border-2 px-4 py-3.5 font-body text-base font-semibold transition-colors cursor-pointer ${
                     categoryId === cat.id
-                      ? 'border-[#1A1A1A] bg-[#1A1A1A] text-white'
-                      : 'border-[#DDD] bg-white text-[#666] hover:border-[#999]'
+                      ? 'border-admin-dark bg-admin-dark text-white'
+                      : 'border-border-strong bg-white text-text-label hover:border-text-placeholder'
                   }`}
                 >
                   {cat.name}
@@ -187,7 +187,7 @@ export function BrandForm({ brand }: Props) {
 
           {/* Brand name */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               브랜드명 *
             </label>
             {errors.brandName && (
@@ -205,21 +205,21 @@ export function BrandForm({ brand }: Props) {
                 }
               }}
               placeholder="예: Neuramis"
-              className={`w-full rounded-[10px] border-2 px-4 py-3.5 font-body text-base text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] ${
+              className={`w-full rounded-[10px] border-2 px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled ${
                 errors.brandName
                   ? 'border-red-400'
-                  : 'border-[#DDD] focus:border-[#1A1A1A]'
+                  : 'border-border-strong focus:border-admin-dark'
               }`}
             />
           </div>
 
           {/* Brand image placeholder */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               브랜드 사진
             </label>
-            <div className="flex h-24 items-center justify-center rounded-[10px] border-2 border-dashed border-[#DDD] bg-[#FAFAFA]">
-              <span className="font-body text-sm text-[#BBB]">
+            <div className="flex h-24 items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input">
+              <span className="font-body text-sm text-text-disabled">
                 추후 구현
               </span>
             </div>
@@ -227,7 +227,7 @@ export function BrandForm({ brand }: Props) {
 
           {/* Description */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               설명
             </label>
             <textarea
@@ -235,20 +235,20 @@ export function BrandForm({ brand }: Props) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="브랜드/제품에 대한 자유로운 설명을 입력하세요"
               rows={4}
-              className="w-full resize-none rounded-[10px] border-2 border-[#DDD] px-4 py-3.5 font-body text-base text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
+              className="w-full resize-none rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
             />
           </div>
 
           {/* Certifications */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               인증/자격
             </label>
             <div className="flex flex-wrap gap-2 mb-3">
               {certifications.map((cert, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#E8E8E8] bg-[#F5F5F5] px-3 py-1.5 font-body text-sm text-[#1A1A1A]"
+                  className="inline-flex items-center gap-1.5 rounded-full border-2 border-border-light bg-bg-light px-3 py-1.5 font-body text-sm text-admin-dark"
                 >
                   {cert}
                   <button
@@ -258,7 +258,7 @@ export function BrandForm({ brand }: Props) {
                         prev.filter((_, i) => i !== index),
                       )
                     }
-                    className="ml-0.5 font-body text-sm text-[#999] hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none p-0 leading-none"
+                    className="ml-0.5 font-body text-sm text-text-placeholder hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none p-0 leading-none"
                   >
                     &times;
                   </button>
@@ -280,13 +280,13 @@ export function BrandForm({ brand }: Props) {
                 }
               }}
               placeholder="인증명을 입력 후 Enter (예: KFDA, CE, FDA)"
-              className="w-full rounded-[10px] border-2 border-[#DDD] px-4 py-3.5 font-body text-base text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
+              className="w-full rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
             />
           </div>
 
           {/* Models */}
           <div>
-            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+            <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               모델 목록
             </label>
             {errors.models && (
@@ -298,17 +298,17 @@ export function BrandForm({ brand }: Props) {
               {models.map((model, index) => (
                 <div
                   key={index}
-                  className="rounded-[10px] border-2 border-[#E8E8E8] bg-white p-5"
+                  className="rounded-[10px] border-2 border-border-light bg-white p-5"
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <span className="font-body text-sm font-bold text-[#1A1A1A]">
+                    <span className="font-body text-sm font-bold text-admin-dark">
                       모델 {index + 1}
                     </span>
                     {models.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeModel(index)}
-                        className="font-body text-sm font-semibold text-[#999] hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none"
+                        className="font-body text-sm font-semibold text-text-placeholder hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none"
                       >
                         삭제
                       </button>
@@ -316,7 +316,7 @@ export function BrandForm({ brand }: Props) {
                   </div>
                   <div className="flex flex-col gap-3">
                     <div>
-                      <label className="mb-1 block font-body text-sm text-[#666]">
+                      <label className="mb-1 block font-body text-sm text-text-label">
                         제품명
                       </label>
                       <input
@@ -326,11 +326,11 @@ export function BrandForm({ brand }: Props) {
                           updateModel(index, 'name', e.target.value)
                         }
                         placeholder="예: Neuramis Volume Lidocaine"
-                        className="w-full rounded-lg border-2 border-[#DDD] px-3.5 py-2.5 font-body text-sm text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
+                        className="w-full rounded-lg border-2 border-border-strong px-3.5 py-2.5 font-body text-sm text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block font-body text-sm text-[#666]">
+                      <label className="mb-1 block font-body text-sm text-text-label">
                         설명
                       </label>
                       <input
@@ -340,7 +340,7 @@ export function BrandForm({ brand }: Props) {
                           updateModel(index, 'description', e.target.value)
                         }
                         placeholder="예: 1.1ml, Deep layer filler with lidocaine"
-                        className="w-full rounded-lg border-2 border-[#DDD] px-3.5 py-2.5 font-body text-sm text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
+                        className="w-full rounded-lg border-2 border-border-strong px-3.5 py-2.5 font-body text-sm text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
                       />
                     </div>
                   </div>
@@ -350,7 +350,7 @@ export function BrandForm({ brand }: Props) {
             <button
               type="button"
               onClick={addModel}
-              className="mt-3 w-full rounded-[10px] border-2 border-dashed border-[#CCC] py-3 font-body text-sm font-semibold text-[#999] hover:border-[#999] hover:text-[#666] transition-colors cursor-pointer bg-transparent"
+              className="mt-3 w-full rounded-[10px] border-2 border-dashed border-border-medium py-3 font-body text-sm font-semibold text-text-placeholder hover:border-text-placeholder hover:text-text-label transition-colors cursor-pointer bg-transparent"
             >
               + 모델 추가
             </button>
@@ -359,7 +359,7 @@ export function BrandForm({ brand }: Props) {
       </div>
 
       {/* Fixed footer */}
-      <div className="fixed bottom-0 right-0 left-[224px] z-10 border-t-2 border-[#E8E8E8] bg-white px-8 py-4 max-lg:left-[196px] max-md:left-[182px] max-sm:left-0">
+      <div className="fixed bottom-0 right-0 left-[224px] z-10 border-t-2 border-border-light bg-white px-8 py-4 max-lg:left-[196px] max-md:left-[182px] max-sm:left-0">
         <div className="mx-auto flex max-w-[800px] items-center justify-between">
           <div>
             {isEdit && (
@@ -377,7 +377,7 @@ export function BrandForm({ brand }: Props) {
             <button
               type="button"
               onClick={() => router.push('/admin/brands')}
-              className="rounded-lg border-2 border-[#DDD] px-5 py-2.5 font-body text-sm font-semibold text-[#666] hover:border-[#999] transition-colors cursor-pointer bg-transparent"
+              className="rounded-lg border-2 border-border-strong px-5 py-2.5 font-body text-sm font-semibold text-text-label hover:border-text-placeholder transition-colors cursor-pointer bg-transparent"
             >
               취소
             </button>
@@ -385,7 +385,7 @@ export function BrandForm({ brand }: Props) {
               type="button"
               onClick={handleSave}
               disabled={isSaving}
-              className="rounded-lg bg-[#1A1A1A] px-6 py-2.5 font-body text-sm font-semibold text-white hover:bg-[#333] transition-colors cursor-pointer border-none disabled:opacity-50"
+              className="rounded-lg bg-admin-dark px-6 py-2.5 font-body text-sm font-semibold text-white hover:bg-admin-dark-hover transition-colors cursor-pointer border-none disabled:opacity-50"
             >
               {isSaving ? '저장 중...' : '저장하기'}
             </button>
