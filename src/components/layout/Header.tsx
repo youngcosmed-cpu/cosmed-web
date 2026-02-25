@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useLang } from '@/lib/i18n/lang-provider';
 
-export function Header() {
+export function Header({ minimal = false }: { minimal?: boolean }) {
   const { t } = useLang();
 
   return (
@@ -12,23 +12,27 @@ export function Header() {
         <Link href="/" className="font-display text-[19px] font-semibold tracking-[0.08em] text-deep-charcoal no-underline">
           Young Cosmed
         </Link>
-        <nav className="flex gap-12 ml-auto mr-12 max-md:hidden max-[992px]:gap-8">
-          <a href="#products" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
-            {t.nav.products}
-          </a>
-          <a href="#about" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
-            {t.nav.about}
-          </a>
-          <a href="#contact" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
-            {t.nav.contact}
-          </a>
-        </nav>
-        <Link
-          href="/admin"
-          className="text-sm font-medium text-text-secondary no-underline hover:text-deep-charcoal transition-colors max-md:text-xs"
-        >
-          Dashboard
-        </Link>
+        {!minimal && (
+          <>
+            <nav className="flex gap-12 ml-auto mr-12 max-md:hidden max-[992px]:gap-8">
+              <a href="#products" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
+                {t.nav.products}
+              </a>
+              <a href="#about" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
+                {t.nav.about}
+              </a>
+              <a href="#contact" className="text-sm font-normal text-text-secondary no-underline hover:text-deep-charcoal transition-colors">
+                {t.nav.contact}
+              </a>
+            </nav>
+            <Link
+              href="/admin"
+              className="text-sm font-medium text-text-secondary no-underline hover:text-deep-charcoal transition-colors max-md:text-xs"
+            >
+              Dashboard
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );

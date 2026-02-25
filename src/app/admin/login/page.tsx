@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import axios from 'axios';
 import { API_URL, setAccessToken } from '@/lib/api/client';
+import { Header } from '@/components/layout/Header';
 
 function LoginForm() {
   const router = useRouter();
@@ -49,7 +50,9 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8F8F8] px-4">
+    <div className="min-h-screen flex flex-col bg-[#F8F8F8]">
+      <Header minimal />
+      <div className="flex-1 flex items-center justify-center px-4">
       <div className="w-full max-w-[400px]">
         <div className="text-center mb-8">
           <h1 className="font-display text-2xl font-bold text-[#1A1A1A]">
@@ -125,6 +128,7 @@ function LoginForm() {
             </Link>
           </div>
         </form>
+      </div>
       </div>
     </div>
   );
