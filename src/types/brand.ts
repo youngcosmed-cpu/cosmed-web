@@ -4,6 +4,14 @@ export interface Category {
   sortOrder: number;
 }
 
+export interface Product {
+  id: number;
+  brandId: number;
+  name: string;
+  description: string | null;
+  sortOrder: number;
+}
+
 export interface Brand {
   id: number;
   categoryId: number;
@@ -14,4 +22,19 @@ export interface Brand {
   createdAt: string;
   updatedAt: string;
   category: Category;
+  products?: Product[];
+}
+
+export interface CreateBrandPayload {
+  categoryId: number;
+  name: string;
+  description?: string;
+  products: { name: string; description?: string }[];
+}
+
+export interface UpdateBrandPayload {
+  categoryId?: number;
+  name?: string;
+  description?: string;
+  products?: { name: string; description?: string }[];
 }
