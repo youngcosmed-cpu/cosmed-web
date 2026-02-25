@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import type { Brand } from '@/types/brand';
 
 interface BrandCardProps {
@@ -7,7 +8,7 @@ interface BrandCardProps {
 
 export function BrandCard({ brand }: BrandCardProps) {
   return (
-    <div className="group cursor-pointer">
+    <Link href={`/brands/${brand.id}`} className="group cursor-pointer no-underline">
       <div className="relative aspect-[4/5] bg-[#FAFAFA] overflow-hidden">
         {brand.imageUrl ? (
           <Image
@@ -28,6 +29,6 @@ export function BrandCard({ brand }: BrandCardProps) {
           {brand.name}
         </h3>
       </div>
-    </div>
+    </Link>
   );
 }
