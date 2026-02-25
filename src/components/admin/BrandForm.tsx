@@ -35,6 +35,10 @@ export function BrandForm({ brand }: Props) {
   );
   const [brandName, setBrandName] = useState(brand?.name ?? '');
   const [description, setDescription] = useState(brand?.description ?? '');
+  const [certifications, setCertifications] = useState<string[]>(
+    brand?.certifications ?? [],
+  );
+  const [certInput, setCertInput] = useState('');
   const [models, setModels] = useState<Model[]>(() => {
     if (brand?.products && brand.products.length > 0) {
       return brand.products.map((p) => ({
@@ -92,6 +96,7 @@ export function BrandForm({ brand }: Props) {
         categoryId: categoryId!,
         name: brandName.trim(),
         description: description.trim() || undefined,
+        certifications,
         products,
       });
     } else {
@@ -99,6 +104,7 @@ export function BrandForm({ brand }: Props) {
         categoryId: categoryId!,
         name: brandName.trim(),
         description: description.trim() || undefined,
+        certifications,
         products,
       });
     }
@@ -230,6 +236,51 @@ export function BrandForm({ brand }: Props) {
               placeholder="브랜드/제품에 대한 자유로운 설명을 입력하세요"
               rows={4}
               className="w-full resize-none rounded-[10px] border-2 border-[#DDD] px-4 py-3.5 font-body text-base text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
+            />
+          </div>
+
+          {/* Certifications */}
+          <div>
+            <label className="mb-2 block font-body text-base font-bold text-[#1A1A1A]">
+              인증/자격
+            </label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {certifications.map((cert, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#E8E8E8] bg-[#F5F5F5] px-3 py-1.5 font-body text-sm text-[#1A1A1A]"
+                >
+                  {cert}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCertifications((prev) =>
+                        prev.filter((_, i) => i !== index),
+                      )
+                    }
+                    className="ml-0.5 font-body text-sm text-[#999] hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none p-0 leading-none"
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+            <input
+              type="text"
+              value={certInput}
+              onChange={(e) => setCertInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const value = certInput.trim();
+                  if (value && !certifications.includes(value)) {
+                    setCertifications((prev) => [...prev, value]);
+                    setCertInput('');
+                  }
+                }
+              }}
+              placeholder="인증명을 입력 후 Enter (예: KFDA, CE, FDA)"
+              className="w-full rounded-[10px] border-2 border-[#DDD] px-4 py-3.5 font-body text-base text-[#1A1A1A] outline-none transition-colors placeholder:text-[#BBB] focus:border-[#1A1A1A]"
             />
           </div>
 
