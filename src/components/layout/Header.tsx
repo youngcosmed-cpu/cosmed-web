@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useLang } from '@/lib/i18n/lang-provider';
 
 export function Header() {
-  const { lang, t, toggleLang } = useLang();
+  const { t } = useLang();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-[10px] border-b border-border">
@@ -23,27 +23,12 @@ export function Header() {
             {t.nav.contact}
           </a>
         </nav>
-        <div className="flex items-center gap-6 max-md:gap-3">
-          <div className="flex items-center gap-2">
-            <button
-              className={`bg-transparent border-none font-body text-[13px] font-medium tracking-[0.02em] cursor-pointer px-[2px] py-1 transition-colors max-md:text-xs ${
-                lang === 'en' ? 'text-deep-charcoal' : 'text-text-muted hover:text-text-secondary'
-              }`}
-              onClick={() => toggleLang('en')}
-            >
-              EN
-            </button>
-            <span className="text-border text-xs select-none">|</span>
-            <button
-              className={`bg-transparent border-none font-body text-[13px] font-medium tracking-[0.02em] cursor-pointer px-[2px] py-1 transition-colors max-md:text-xs ${
-                lang === 'ko' ? 'text-deep-charcoal' : 'text-text-muted hover:text-text-secondary'
-              }`}
-              onClick={() => toggleLang('ko')}
-            >
-              KR
-            </button>
-          </div>
-        </div>
+        <Link
+          href="/admin"
+          className="text-sm font-medium text-text-secondary no-underline hover:text-deep-charcoal transition-colors max-md:text-xs"
+        >
+          Dashboard
+        </Link>
       </div>
     </header>
   );
