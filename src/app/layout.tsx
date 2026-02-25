@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Manrope, Inter } from 'next/font/google';
 import { QueryProvider } from '@/lib/query/query-provider';
-import { LangProvider } from '@/lib/i18n/lang-provider';
 import './globals.css';
 
 const manrope = Manrope({
@@ -30,9 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${inter.variable}`}>
       <body>
-        <QueryProvider>
-          <LangProvider>{children}</LangProvider>
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

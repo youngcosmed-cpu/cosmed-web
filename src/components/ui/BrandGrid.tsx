@@ -6,10 +6,8 @@ import { BrandCard } from './BrandCard';
 import { EmptyState } from './EmptyState';
 import { BrandGridSkeleton } from './BrandGridSkeleton';
 import { CategoryFilter } from './CategoryFilter';
-import { useLang } from '@/lib/i18n/lang-provider';
 
 export function BrandGrid() {
-  const { t } = useLang();
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>(
     undefined,
   );
@@ -55,7 +53,7 @@ export function BrandGrid() {
             href="mailto:wholesale@youngcosmed.com"
             className="inline-flex items-center gap-2 font-body text-[13px] font-normal text-white tracking-[0.02em] px-6 py-3 bg-deep-charcoal border-none cursor-pointer hover:bg-[#1a1a1b] transition-all no-underline max-md:px-[18px] max-md:py-2.5 max-md:text-xs"
           >
-            <span>{t.products.inquiryBtn}</span>
+            <span>Request Bulk Pricing</span>
             <span className="text-sm transition-transform group-hover:translate-x-[3px]">→</span>
           </a>
         </div>

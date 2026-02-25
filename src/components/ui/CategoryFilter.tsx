@@ -1,6 +1,5 @@
 'use client';
 
-import { useLang } from '@/lib/i18n/lang-provider';
 import { useCategories } from '@/hooks/queries/use-categories';
 import type { Category } from '@/types/brand';
 
@@ -10,7 +9,6 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
-  const { t } = useLang();
   const { data } = useCategories();
   const categories = data?.data;
 
@@ -24,7 +22,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
         }`}
         onClick={() => onSelect(undefined)}
       >
-        {t.products.allCategory}
+        All
       </button>
       {categories?.map((cat: Category) => (
         <button

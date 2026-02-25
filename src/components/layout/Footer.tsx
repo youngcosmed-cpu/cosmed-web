@@ -1,10 +1,4 @@
-'use client';
-
-import { useLang } from '@/lib/i18n/lang-provider';
-
 export function Footer() {
-  const { t } = useLang();
-
   return (
     <footer className="bg-deep-charcoal border-t border-white/[0.08] pt-15 pb-10">
       <div className="max-w-[1400px] mx-auto px-15 max-md:px-6 max-[992px]:px-10">
@@ -15,18 +9,18 @@ export function Footer() {
               Young Cosmed
             </div>
             <p className="text-[13px] font-light tracking-[0.02em] text-text-muted">
-              {t.footer.tagline}
+              Medical Aesthetic Products — B2B Wholesale
             </p>
           </div>
           <nav className="flex gap-8 max-md:gap-6">
             <a href="#products" className="font-body text-[13px] font-normal text-text-muted no-underline tracking-[0.02em] hover:text-white transition-colors">
-              {t.nav.products}
+              Products
             </a>
             <a href="#about" className="font-body text-[13px] font-normal text-text-muted no-underline tracking-[0.02em] hover:text-white transition-colors">
-              {t.nav.about}
+              About
             </a>
             <a href="#contact" className="font-body text-[13px] font-normal text-text-muted no-underline tracking-[0.02em] hover:text-white transition-colors">
-              {t.nav.contact}
+              Contact
             </a>
           </nav>
         </div>
@@ -38,37 +32,37 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-12 gap-y-4 max-md:grid-cols-1 max-md:gap-3">
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
             <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
-              {t.footer.ceo}
+              CEO
             </span>
             <span className="font-body text-[13px] font-normal text-text-muted">
-              {t.footer.ceoName}
+              Eun Young Kwak
             </span>
           </div>
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
             <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
-              {t.footer.bizNo}
+              Business Reg. No.
             </span>
             <span className="font-body text-[13px] font-normal text-text-muted">
-              {t.footer.bizNoValue}
+              763-58-00698
             </span>
           </div>
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
             <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
-              {t.footer.address}
+              Address
             </span>
             <span className="font-body text-[13px] font-normal text-text-muted">
-              {t.footer.addressValue}
+              69, Seongsui-ro, Seongdong-gu, Seoul, Republic of Korea
             </span>
           </div>
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
             <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
-              {t.footer.email}
+              Email
             </span>
             <a
-              href={`mailto:${t.footer.emailValue}`}
+              href="mailto:wholesale@youngcosmed.com"
               className="font-body text-[13px] font-normal text-text-muted no-underline hover:text-white transition-colors"
             >
-              {t.footer.emailValue}
+              wholesale@youngcosmed.com
             </a>
           </div>
         </div>
@@ -79,7 +73,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="flex justify-between items-center max-md:flex-col max-md:gap-4 max-md:text-center">
           <p className="text-xs font-light tracking-[0.02em] text-white/30">
-            {t.footer.copyright}
+            © 2025 Young Cosmed. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a
