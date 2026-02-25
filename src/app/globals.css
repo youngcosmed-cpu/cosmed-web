@@ -39,6 +39,23 @@
 
   /* Status */
   --color-error: #E53935;
+  --color-status-new: #F5F0EB;
+  --color-status-new-text: #6B5335;
+  --color-status-reviewed: #F0F2F4;
+  --color-status-reviewed-text: #5A5A5D;
+  --color-status-responded: #EDF5F0;
+  --color-status-responded-text: #3A6C4C;
+
+  /* Contact */
+  --color-contact-whatsapp: #E8F5EC;
+  --color-contact-whatsapp-text: #156E2E;
+  --color-contact-email: #F0F2F4;
+
+  /* Accent */
+  --color-bg-warm: #FFFDF8;
+  --color-bg-warm-row: #FFFDFB;
+  --color-bg-price: #FFFAF5;
+  --color-border-price: #E8D5C4;
 
   --font-display: 'Manrope', 'Inter', -apple-system, sans-serif;
   --font-body: 'Inter', -apple-system, sans-serif;
