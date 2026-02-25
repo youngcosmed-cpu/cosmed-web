@@ -21,11 +21,7 @@ export interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  admin: null,
-  isLoading: true,
-  logout: async () => {},
-});
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();

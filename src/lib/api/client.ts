@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 // Access Token — module-scope variable (not in localStorage for XSS defense)
 let accessToken: string | null = null;
@@ -21,13 +21,45 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// [H1] Refresh queue pattern to prevent race conditions
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string | null) => void;
+  reject: (error: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 // Response interceptor: refresh on 401 and retry
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Another refresh is in progress — queue this request
+        originalRequest._retry = true;
+        return new Promise<string | null>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
         const { data } = await axios.post(
           `${API_URL}/auth/refresh`,
@@ -35,26 +67,33 @@ api.interceptors.response.use(
           { withCredentials: true },
         );
         setAccessToken(data.accessToken);
+        processQueue(null, data.accessToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
-      } catch {
+      } catch (refreshError) {
+        processQueue(refreshError);
         setAccessToken(null);
         if (typeof window !== 'undefined') {
           window.location.href = '/admin/login';
         }
         return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
       }
     }
+
     return Promise.reject(error);
   },
 );
 
-// Legacy apiFetch wrapper — keeps existing hooks working without changes
+// [M4] Legacy apiFetch wrapper — injects access token for authenticated endpoints
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = getAccessToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
   });

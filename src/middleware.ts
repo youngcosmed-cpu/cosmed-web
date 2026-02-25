@@ -21,6 +21,7 @@ export function middleware(request: NextRequest) {
 
   if (!refreshToken) {
     const loginUrl = new URL('/admin/login', request.url);
+    loginUrl.searchParams.set('returnUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
