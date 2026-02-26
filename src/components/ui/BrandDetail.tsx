@@ -162,7 +162,7 @@ export function BrandDetail({ id }: { id: number }) {
                             {product.name}
                           </span>
                           {product.description && (
-                            <span className="text-sm text-text-muted leading-[1.4] max-md:text-[13px] max-[480px]:text-xs">
+                            <span className="text-sm text-text-muted leading-[1.4] max-md:text-[13px] max-[480px]:text-xs whitespace-pre-line break-words">
                               {product.description}
                             </span>
                           )}
@@ -234,8 +234,8 @@ export function BrandDetail({ id }: { id: number }) {
 
             {/* Brand Description */}
             {brand.description && (
-              <div className="max-w-[800px] mx-auto mb-16 text-center max-[992px]:mb-12 max-md:mb-10 max-md:text-left">
-                <p className="text-xl font-normal leading-[1.8] text-text-strong max-[992px]:text-lg max-md:text-base">
+              <div className="max-w-[800px] mx-auto mb-16 text-left max-[992px]:mb-12 max-md:mb-10">
+                <p className="text-xl font-normal leading-[1.8] text-text-strong max-[992px]:text-lg max-md:text-base whitespace-pre-line break-words">
                   {brand.description}
                 </p>
               </div>

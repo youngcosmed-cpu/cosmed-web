@@ -6,3 +6,7 @@ export interface Review {
   photos: string[];
   createdAt: string;
 }
+
+export interface AdminReview extends Review {
+  brand: { id: number; name: string };
+}

@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/auth/useAuth';
 const menuItems = [
   { href: '/admin/inquiries', label: '문의 확인' },
   { href: '/admin/brands', label: '제품 등록/수정' },
+  { href: '/admin/reviews', label: '리뷰 관리' },
   { href: '/admin/invoices', label: '인보이스 생성' },
 ];
 

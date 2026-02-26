@@ -82,7 +82,7 @@ export function ChatMessages({
                       {msg.brandCard.name}
                     </h4>
                     {msg.brandCard.description && (
-                      <p className="text-xs text-text-muted mt-1 line-clamp-2">
+                      <p className="text-xs text-text-muted mt-1 line-clamp-2 whitespace-pre-line break-words">
                         {msg.brandCard.description}
                       </p>
                     )}
@@ -184,7 +184,7 @@ export function ChatMessages({
                               {product.name}
                             </span>
                             {product.description && (
-                              <span className="font-body text-xs text-text-muted">
+                              <span className="font-body text-xs text-text-muted whitespace-pre-line break-words">
                                 {product.description}
                               </span>
                             )}

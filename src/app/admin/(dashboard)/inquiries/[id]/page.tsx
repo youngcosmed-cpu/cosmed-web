@@ -137,7 +137,7 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
                       {product.name}
                     </p>
                     {product.description && (
-                      <p className="font-body text-xs text-text-muted mt-1">
+                      <p className="font-body text-xs text-text-muted mt-1 whitespace-pre-line break-words">
                         {product.description}
                       </p>
                     )}
