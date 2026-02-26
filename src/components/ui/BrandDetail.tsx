@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useBrand } from '@/hooks/queries/use-brand';
 import { BrandDetailSkeleton } from './BrandDetailSkeleton';
+import { ReviewForm } from './ReviewForm';
+import { ReviewList } from './ReviewList';
 
 // Check icon for selected variant checkbox
 function CheckIcon() {
@@ -270,25 +272,13 @@ export function BrandDetail({ id }: { id: number }) {
               </p>
             </div>
 
-            {/* No reviews state */}
-            <div className="flex flex-col items-center justify-center py-20 px-8 bg-white text-center max-md:py-14 max-md:px-6">
-              <div className="w-[72px] h-[72px] flex items-center justify-center text-border-strong mb-6 max-md:w-14 max-md:h-14">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="w-14 h-14 max-md:w-[42px] max-md:h-[42px]"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  <line x1="9" y1="9" x2="15" y2="9" />
-                  <line x1="9" y1="13" x2="12" y2="13" />
-                </svg>
-              </div>
-              <p className="text-[15px] text-text-placeholder max-w-[320px] leading-[1.6] max-md:text-sm">
-                No reviews yet. Be the first to share your experience!
-              </p>
+            {/* Review Form */}
+            <div className="mb-8">
+              <ReviewForm brandId={id} />
             </div>
+
+            {/* Review List */}
+            <ReviewList brandId={id} />
           </div>
         </section>
       </div>
