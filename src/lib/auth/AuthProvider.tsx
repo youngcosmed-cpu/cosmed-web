@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, setAccessToken } from '@/lib/api/client';
+import { api, getAccessToken, setAccessToken } from '@/lib/api/client';
 
 interface Admin {
   id: number;
@@ -29,11 +29,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Try to restore session via refresh token
     const initAuth = async () => {
       try {
-        const { data: refreshData } = await api.post('/auth/refresh');
-        setAccessToken(refreshData.accessToken);
+        // If no access token in memory (e.g. page refresh), try to refresh
+        if (!getAccessToken()) {
+          const { data: refreshData } = await api.post('/auth/refresh');
+          setAccessToken(refreshData.accessToken);
+        }
 
         const { data: meData } = await api.get('/auth/me');
         setAdmin(meData);
