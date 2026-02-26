@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useBrands } from '@/hooks/queries/use-brands';
 import { useBrand } from '@/hooks/queries/use-brand';
+import { useCategories } from '@/hooks/queries/use-categories';
 import { useSendMessage } from '@/hooks/mutations/use-chat';
 import { useCreateInquiry } from '@/hooks/mutations/use-inquiry-mutations';
 import { ChatMessages } from '@/components/chat/ChatMessages';
@@ -12,21 +13,36 @@ import { ChatInput } from '@/components/chat/ChatInput';
 import { ContactForm } from '@/components/chat/ContactForm';
 import { SuccessModal } from '@/components/chat/SuccessModal';
 import type { Message } from '@/components/chat/ChatMessages';
+import type { Brand, Category } from '@/types/brand';
+
+type SelectionStep = 'category' | 'brand' | 'product' | 'chatting';
 
 function ChatContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const brandIdParam = searchParams.get('brandId');
   const brandId = brandIdParam ? Number(brandIdParam) : null;
+  const productIdsParam = searchParams.get('productIds');
+  const urlProductIds = productIdsParam
+    ? productIdsParam.split(',').map(Number).filter((n) => !isNaN(n) && n > 0)
+    : [];
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(brandId);
   const [showContactForm, setShowContactForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [inquirySubmitted, setInquirySubmitted] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  const { data: brandsPages, isLoading: brandsLoading } = useBrands();
-  const { data: brand, isLoading: brandLoading } = useBrand(brandId);
+  // Step-based selection state
+  const [selectionStep, setSelectionStep] = useState<SelectionStep>(brandId ? 'chatting' : 'category');
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
+
+  // Hooks
+  const { data: categoriesData, isLoading: categoriesLoading } = useCategories();
+  const { data: categoryBrandsPages, isLoading: categoryBrandsLoading } = useBrands(selectedCategoryId ?? undefined);
+  const { data: brand, isLoading: brandLoading } = useBrand(selectedBrandId);
   const sendMessage = useSendMessage();
   const createInquiry = useCreateInquiry();
 
@@ -35,6 +51,7 @@ function ChatContent() {
     if (initialized) return;
 
     if (brandId) {
+      // URL has brandId — existing flow
       if (brandLoading || !brand) return;
       setMessages([
         {
@@ -50,48 +67,157 @@ function ChatContent() {
       setSelectedBrandId(brandId);
       setInitialized(true);
     } else {
-      if (brandsLoading) return;
-      const brands = brandsPages?.pages.flatMap((p) => p.data) ?? [];
+      // No brandId — show categories
+      if (categoriesLoading) return;
+      const categories = categoriesData?.data ?? [];
       setMessages([
         {
           sender_type: 'assistant',
-          content: `Nice to meet you! This is Young Cosmed, a professional global K-beauty wholesale platform.\n\nWhich brand are you interested in?`,
-          brands: brands.length > 0 ? brands : undefined,
+          content: `Nice to meet you! This is Young Cosmed, a professional global K-beauty wholesale platform.\n\nWhich category are you interested in?`,
+          categories: categories.length > 0 ? categories : undefined,
         },
       ]);
       setInitialized(true);
     }
-  }, [brandId, brand, brandLoading, brandsPages, brandsLoading, initialized]);
+  }, [brandId, brand, brandLoading, categoriesData, categoriesLoading, initialized]);
+
+  // After category selected → brands loaded → add brands message
+  useEffect(() => {
+    if (selectionStep !== 'brand' || categoryBrandsLoading || !selectedCategoryId) return;
+    const brands = categoryBrandsPages?.pages.flatMap((p) => p.data) ?? [];
+    if (brands.length === 0) return;
+
+    // Only add if last assistant message doesn't already have brands
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.brands) return prev;
+      return [
+        ...prev,
+        {
+          sender_type: 'assistant' as const,
+          content: 'Great choice! Which brand would you like to explore?',
+          brands,
+        },
+      ];
+    });
+  }, [selectionStep, categoryBrandsLoading, categoryBrandsPages, selectedCategoryId]);
+
+  // After brand selected → brand detail loaded → add products message
+  useEffect(() => {
+    if (selectionStep !== 'product' || brandLoading || !brand) return;
+
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.products !== undefined) return prev;
+      return [
+        ...prev,
+        {
+          sender_type: 'assistant' as const,
+          content: brand.products && brand.products.length > 0
+            ? `Here are the products from ${brand.name}. Select the ones you're interested in, then click "Start Chat" to begin!`
+            : `Let's discuss ${brand.name}! Click "Start Chat" to begin.`,
+          products: brand.products ?? [],
+        },
+      ];
+    });
+  }, [selectionStep, brandLoading, brand]);
+
+  const handleSelectCategory = useCallback((category: Category) => {
+    setSelectedCategoryId(category.id);
+    setSelectionStep('brand');
+    const text = `I'm interested in ${category.name}`;
+    setMessages((prev) => [...prev, { sender_type: 'user', content: text }]);
+  }, []);
 
   const handleSelectBrand = useCallback(
-    (b: typeof brand & { id: number; name: string }) => {
+    (b: Brand) => {
       setSelectedBrandId(b.id);
       const text = `I'm interested in ${b.name}`;
       const userMsg: Message = { sender_type: 'user', content: text };
       setMessages((prev) => [...prev, userMsg]);
 
-      sendMessage.mutate(
-        {
-          brand_id: b.id,
-          message: text,
-          conversation_history: [],
-        },
-        {
-          onSuccess: (data) => {
-            const assistantMsg: Message = {
-              sender_type: 'assistant',
-              content: data.reply,
-            };
-            setMessages((prev) => [...prev, assistantMsg]);
-            if (data.show_contact_form) {
-              setTimeout(() => setShowContactForm(true), 800);
-            }
+      if (brandId) {
+        // Came from URL with brandId — existing flow: send message immediately
+        sendMessage.mutate(
+          {
+            brand_id: b.id,
+            message: text,
+            conversation_history: [],
           },
-        },
-      );
+          {
+            onSuccess: (data) => {
+              setMessages((prev) => [
+                ...prev,
+                { sender_type: 'assistant', content: data.reply },
+              ]);
+              if (data.show_contact_form) {
+                setTimeout(() => setShowContactForm(true), 800);
+              }
+            },
+          },
+        );
+      } else {
+        // Step-based flow: move to product selection
+        setSelectionStep('product');
+      }
     },
-    [sendMessage],
+    [brandId, sendMessage],
   );
+
+  const handleToggleProduct = useCallback((productId: number) => {
+    setSelectedProductIds((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId],
+    );
+  }, []);
+
+  const handleStartChat = useCallback(() => {
+    if (!selectedBrandId) return;
+
+    // Mark products as confirmed in the last products message
+    setMessages((prev) =>
+      prev.map((msg, idx) => {
+        if (idx === prev.length - 1 && msg.products !== undefined) {
+          return { ...msg, productsConfirmed: true };
+        }
+        return msg;
+      }),
+    );
+
+    // Add user summary message
+    const productNames = selectedProductIds.length > 0 && brand?.products
+      ? brand.products
+          .filter((p) => selectedProductIds.includes(p.id))
+          .map((p) => p.name)
+      : [];
+    const text = productNames.length > 0
+      ? `I'd like to discuss: ${productNames.join(', ')}`
+      : `I'd like to learn more about ${brand?.name ?? 'this brand'}`;
+
+    setMessages((prev) => [...prev, { sender_type: 'user', content: text }]);
+    setSelectionStep('chatting');
+
+    // Send to API
+    sendMessage.mutate(
+      {
+        brand_id: selectedBrandId,
+        message: text,
+        conversation_history: [],
+      },
+      {
+        onSuccess: (data) => {
+          setMessages((prev) => [
+            ...prev,
+            { sender_type: 'assistant', content: data.reply },
+          ]);
+          if (data.show_contact_form) {
+            setTimeout(() => setShowContactForm(true), 800);
+          }
+        },
+      },
+    );
+  }, [selectedBrandId, selectedProductIds, brand, sendMessage]);
 
   const handleSendMessage = useCallback(
     (text: string) => {
@@ -110,11 +236,10 @@ function ChatContent() {
         },
         {
           onSuccess: (data) => {
-            const assistantMsg: Message = {
-              sender_type: 'assistant',
-              content: data.reply,
-            };
-            setMessages((prev) => [...prev, assistantMsg]);
+            setMessages((prev) => [
+              ...prev,
+              { sender_type: 'assistant', content: data.reply },
+            ]);
             if (data.show_contact_form) {
               setTimeout(() => setShowContactForm(true), 800);
             }
@@ -128,6 +253,8 @@ function ChatContent() {
   const handleSubmitContact = (method: 'whatsapp' | 'email', value: string) => {
     if (!selectedBrandId) return;
 
+    const finalProductIds = selectedProductIds.length > 0 ? selectedProductIds : urlProductIds;
+
     createInquiry.mutate(
       {
         brand_id: selectedBrandId,
@@ -136,11 +263,13 @@ function ChatContent() {
         messages: messages
           .filter((m) => m.content)
           .map((m) => ({ sender_type: m.sender_type, content: m.content })),
+        ...(finalProductIds.length > 0 && { product_ids: finalProductIds }),
       },
       {
         onSuccess: () => {
           setShowContactForm(false);
           setShowSuccess(true);
+          setInquirySubmitted(true);
         },
       },
     );
@@ -168,8 +297,12 @@ function ChatContent() {
       {/* Messages */}
       <ChatMessages
         messages={messages}
-        isLoading={sendMessage.isPending}
+        isLoading={sendMessage.isPending || categoryBrandsLoading || (selectionStep === 'product' && brandLoading)}
         onSelectBrand={handleSelectBrand}
+        onSelectCategory={handleSelectCategory}
+        onToggleProduct={handleToggleProduct}
+        onStartChat={handleStartChat}
+        selectedProductIds={selectedProductIds}
       />
 
       {/* Contact Form */}
@@ -183,7 +316,7 @@ function ChatContent() {
       {/* Input */}
       <ChatInput
         onSend={handleSendMessage}
-        disabled={sendMessage.isPending || !selectedBrandId || showContactForm}
+        disabled={sendMessage.isPending || selectionStep !== 'chatting' || showContactForm || inquirySubmitted}
       />
 
       {/* Success Modal */}

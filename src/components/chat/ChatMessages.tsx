@@ -2,22 +2,37 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import type { Brand } from '@/types/brand';
+import type { Brand, Category, Product } from '@/types/brand';
 
 export interface Message {
   sender_type: 'user' | 'assistant';
   content: string;
   brands?: Brand[];
   brandCard?: Brand;
+  categories?: Category[];
+  products?: Product[];
+  productsConfirmed?: boolean;
 }
 
 interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
   onSelectBrand?: (brand: Brand) => void;
+  onSelectCategory?: (category: Category) => void;
+  onToggleProduct?: (productId: number) => void;
+  onStartChat?: () => void;
+  selectedProductIds?: number[];
 }
 
-export function ChatMessages({ messages, isLoading, onSelectBrand }: ChatMessagesProps) {
+export function ChatMessages({
+  messages,
+  isLoading,
+  onSelectBrand,
+  onSelectCategory,
+  onToggleProduct,
+  onStartChat,
+  selectedProductIds = [],
+}: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -110,6 +125,84 @@ export function ChatMessages({ messages, isLoading, onSelectBrand }: ChatMessage
                       </div>
                     </button>
                   ))}
+                </div>
+              )}
+
+              {msg.categories && msg.categories.length > 0 && (
+                <div className="flex flex-col gap-2 mt-3">
+                  {msg.categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => onSelectCategory?.(category)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border-light bg-white hover:border-admin-dark hover:bg-white/80 transition-colors text-left cursor-pointer"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-bg-light flex items-center justify-center font-display text-xs text-admin-nav shrink-0">
+                        {category.name.charAt(0)}
+                      </div>
+                      <p className="font-body text-sm font-semibold text-admin-dark">
+                        {category.name}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {msg.products && (
+                <div className="flex flex-col gap-2 mt-3">
+                  {msg.products.length > 0 ? (
+                    msg.products.map((product) => {
+                      const isSelected = selectedProductIds.includes(product.id);
+                      const isDisabled = !!msg.productsConfirmed;
+                      const isHidden = isDisabled && !isSelected;
+                      return (
+                        <div
+                          key={product.id}
+                          onClick={() => !isDisabled && onToggleProduct?.(product.id)}
+                          className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                            isHidden
+                              ? 'opacity-40 pointer-events-none border-transparent bg-white'
+                              : isSelected
+                                ? 'bg-white border-admin-dark'
+                                : 'bg-white border-border-light hover:border-admin-dark'
+                          } ${isDisabled ? 'pointer-events-none' : 'cursor-pointer'}`}
+                        >
+                          <div
+                            className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-all ${
+                              isSelected
+                                ? 'bg-admin-dark border-admin-dark'
+                                : 'border-border-medium'
+                            }`}
+                          >
+                            {isSelected && (
+                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-0.5 flex-1">
+                            <span className="font-body text-sm font-semibold text-admin-dark">
+                              {product.name}
+                            </span>
+                            {product.description && (
+                              <span className="font-body text-xs text-text-muted">
+                                {product.description}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="text-xs text-text-muted">No products available.</p>
+                  )}
+                  {!msg.productsConfirmed && (
+                    <button
+                      onClick={onStartChat}
+                      className="mt-2 px-5 py-3 bg-admin-dark text-white rounded-xl font-body text-sm font-semibold hover:bg-admin-dark/90 transition-colors"
+                    >
+                      Start Chat{selectedProductIds.length > 0 && ` (${selectedProductIds.length} selected)`}
+                    </button>
+                  )}
                 </div>
               )}
             </div>

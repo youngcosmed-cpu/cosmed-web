@@ -24,7 +24,7 @@ export function useUpdateBrand() {
     },
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
-      queryClient.invalidateQueries({ queryKey: ['brands', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['brands', 'detail', variables.id] });
     },
   });
 }

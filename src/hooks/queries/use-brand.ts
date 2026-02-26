@@ -4,7 +4,7 @@ import type { Brand } from '@/types/brand';
 
 export function useBrand(id: number | null) {
   return useQuery({
-    queryKey: ['brands', id],
+    queryKey: ['brands', 'detail', id],
     queryFn: async () => {
       const { data } = await api.get<Brand>(`/brands/${id}`);
       return data;

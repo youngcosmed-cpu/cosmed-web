@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCategories } from '@/hooks/queries/use-categories';
@@ -33,6 +33,7 @@ export function BrandForm({ brand }: Props) {
   const deleteBrand = useDeleteBrand();
   const { upload, isUploading } = useUploadImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   const [categoryId, setCategoryId] = useState<number | null>(
     brand?.categoryId ?? null,
@@ -59,6 +60,16 @@ export function BrandForm({ brand }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const isSaving = createBrand.isPending || updateBrand.isPending;
   const isDeleting = deleteBrand.isPending;
+
+  const adjustDescriptionHeight = () => {
+    if (!descriptionRef.current) return;
+    descriptionRef.current.style.height = 'auto';
+    descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+  };
+
+  useEffect(() => {
+    adjustDescriptionHeight();
+  }, [description]);
 
   const updateModel = (index: number, field: keyof Model, value: string) => {
     setModels((prev) =>
@@ -287,11 +298,14 @@ export function BrandForm({ brand }: Props) {
               설명
             </label>
             <textarea
+              ref={descriptionRef}
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                adjustDescriptionHeight();
+              }}
               placeholder="브랜드/제품에 대한 자유로운 설명을 입력하세요"
-              rows={4}
-              className="w-full resize-none rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
+              className="w-full min-h-[180px] resize-none overflow-hidden rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
             />
           </div>
 

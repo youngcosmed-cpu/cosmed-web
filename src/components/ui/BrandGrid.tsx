@@ -39,7 +39,9 @@ export function BrandGrid() {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const brands = data?.pages.flatMap((page) => page.data) ?? [];
+  const brands = (data?.pages ?? [])
+    .flatMap((page) => (Array.isArray(page?.data) ? page.data : []))
+    .filter(Boolean);
 
   return (
     <section className="pt-25 pb-20 bg-body-bg max-md:pt-20 max-md:pb-15 max-[992px]:pt-[90px]" id="products">

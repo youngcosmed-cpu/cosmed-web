@@ -42,4 +42,5 @@ export interface InquiryDetail {
     category: { id: number; name: string };
   };
   messages: InquiryMessage[];
+  products: { id: number; name: string; description: string | null }[];
 }

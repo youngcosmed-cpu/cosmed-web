@@ -41,8 +41,14 @@ export function BrandDetail({ id }: { id: number }) {
   };
 
   const handleOpenChat = () => {
-    router.push(`/chat?brandId=${id}`);
+    const params = new URLSearchParams({ brandId: String(id) });
+    if (selectedProducts.length > 0) {
+      params.set('productIds', selectedProducts.join(','));
+    }
+    router.push(`/chat?${params.toString()}`);
   };
+
+  const categoryName = brand.category?.name ?? 'GENERAL';
 
   return (
     <div
@@ -72,7 +78,7 @@ export function BrandDetail({ id }: { id: number }) {
           className={`mb-12 transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] max-[992px]:mb-8 max-md:mb-6 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
         >
           <span className="inline-block font-body text-[13px] font-semibold tracking-[0.2em] uppercase text-admin-dark bg-bg-light px-5 py-2.5 mb-4 max-md:text-xs max-md:px-4 max-md:py-2 max-md:mb-4">
-            {brand.category.name}
+            {categoryName}
           </span>
           <h1 className="font-display text-[56px] font-bold tracking-[-0.03em] leading-[1.05] text-admin-dark max-lg:text-5xl max-[992px]:text-[44px] max-md:text-4xl max-[480px]:text-[32px]">
             {brand.name}
@@ -206,7 +212,7 @@ export function BrandDetail({ id }: { id: number }) {
         <section className="py-20 border-t border-border-light max-[992px]:py-14 max-md:py-12">
           <div className="max-w-[1000px] mx-auto">
             {/* Certification Badges */}
-            {(brand.certifications.length > 0) && (
+            {(brand.certifications?.length > 0) && (
               <div className="flex flex-wrap gap-3 justify-center mb-10 max-md:gap-2.5 max-md:mb-8">
                 {brand.certifications.map((cert, idx) => (
                   <span

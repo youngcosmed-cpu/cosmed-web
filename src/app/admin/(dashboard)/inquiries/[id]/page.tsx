@@ -121,6 +121,32 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
             </div>
           </div>
 
+          {/* Interested Products */}
+          {inquiry.products && inquiry.products.length > 0 && (
+            <div className="mb-6">
+              <span className="block font-body text-xs font-bold uppercase tracking-wider text-text-label mb-3">
+                관심 제품
+              </span>
+              <div className="flex flex-col gap-2">
+                {inquiry.products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-bg-input border border-border-strong rounded-lg px-4 py-3"
+                  >
+                    <p className="font-body text-sm font-semibold text-admin-dark">
+                      {product.name}
+                    </p>
+                    {product.description && (
+                      <p className="font-body text-xs text-text-muted mt-1">
+                        {product.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Contact Info */}
           <div>
             <span className="block font-body text-xs font-bold uppercase tracking-wider text-text-label mb-3">
