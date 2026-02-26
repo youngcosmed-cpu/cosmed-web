@@ -332,7 +332,7 @@ function ChatContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense>
+    <Suspense fallback={null}>
       <ChatContent />
     </Suspense>
   );

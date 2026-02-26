@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useBrand } from '@/hooks/queries/use-brand';
@@ -20,13 +20,7 @@ function CheckIcon() {
 export function BrandDetail({ id }: { id: number }) {
   const router = useRouter();
   const { data: brand, isLoading } = useBrand(id);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
 
   if (isLoading || !brand) {
     return <BrandDetailSkeleton />;
@@ -52,7 +46,7 @@ export function BrandDetail({ id }: { id: number }) {
 
   return (
     <div
-      className={`min-h-screen bg-white transition-opacity duration-600 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+      className="min-h-screen bg-white animate-[fadeIn_0.6s_ease-out]"
     >
       <div className="max-w-[1400px] mx-auto px-15 pt-10 pb-20 max-lg:px-10 max-md:px-5 max-md:pt-6 max-md:pb-15">
         {/* Back Button */}
@@ -75,7 +69,7 @@ export function BrandDetail({ id }: { id: number }) {
 
         {/* Header: Category + Brand Name */}
         <header
-          className={`mb-12 transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] max-[992px]:mb-8 max-md:mb-6 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+          className="mb-12 max-[992px]:mb-8 max-md:mb-6 animate-[fadeSlideUp_0.6s_cubic-bezier(0.16,1,0.3,1)_both]"
         >
           <span className="inline-block font-body text-[13px] font-semibold tracking-[0.2em] uppercase text-admin-dark bg-bg-light px-5 py-2.5 mb-4 max-md:text-xs max-md:px-4 max-md:py-2 max-md:mb-4">
             {categoryName}
@@ -89,7 +83,7 @@ export function BrandDetail({ id }: { id: number }) {
         <section className="grid grid-cols-2 gap-25 items-start max-[992px]:grid-cols-1 max-[992px]:gap-10 max-lg:gap-[70px]">
           {/* Left: Brand Image */}
           <div
-            className={`sticky top-10 transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] max-[992px]:static max-[992px]:top-0 max-[992px]:max-w-[480px] max-[992px]:mx-auto max-[992px]:w-full ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
+            className="sticky top-10 max-[992px]:static max-[992px]:top-0 max-[992px]:max-w-[480px] max-[992px]:mx-auto max-[992px]:w-full animate-[fadeSlideLeft_0.8s_cubic-bezier(0.16,1,0.3,1)_both]"
           >
             <div className="bg-bg-light aspect-square overflow-hidden relative group/img">
               {brand.imageUrl ? (
@@ -111,7 +105,7 @@ export function BrandDetail({ id }: { id: number }) {
 
           {/* Right: Product Selector */}
           <div
-            className={`py-10 flex flex-col transition-all duration-800 ease-[cubic-bezier(0.16,1,0.3,1)] delay-200 max-[992px]:py-0 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[30px]'}`}
+            className="py-10 flex flex-col max-[992px]:py-0 animate-[fadeSlideUp_0.8s_cubic-bezier(0.16,1,0.3,1)_0.2s_both]"
           >
             <div className="flex flex-col h-full">
               {/* Selector Header */}

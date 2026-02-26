@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { queryKeys } from '@/lib/query/query-keys';
 import type { InquiryListItem } from '@/types/inquiry';
 import type { PaginatedResponse } from '@/types/api';
@@ -12,13 +12,14 @@ interface UseInquiriesParams {
 export function useInquiries(params?: UseInquiriesParams) {
   return useInfiniteQuery({
     queryKey: queryKeys.inquiries.list(params),
-    queryFn: ({ pageParam }) => {
+    queryFn: async ({ pageParam }) => {
       const searchParams = new URLSearchParams();
       if (params?.status) searchParams.set('status', params.status);
       if (params?.contactMethod) searchParams.set('contactMethod', params.contactMethod);
       if (pageParam) searchParams.set('cursor', String(pageParam));
       const qs = searchParams.toString();
-      return apiFetch<PaginatedResponse<InquiryListItem>>(`/inquiries${qs ? `?${qs}` : ''}`);
+      const { data } = await api.get<PaginatedResponse<InquiryListItem>>(`/inquiries${qs ? `?${qs}` : ''}`);
+      return data;
     },
     initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,

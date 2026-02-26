@@ -108,28 +108,32 @@ export function BrandForm({ brand }: Props) {
         ...(m.description.trim() ? { description: m.description.trim() } : {}),
       }));
 
-    if (isEdit && brand) {
-      await updateBrand.mutateAsync({
-        id: brand.id,
-        categoryId: categoryId!,
-        name: brandName.trim(),
-        description: description.trim() || undefined,
-        imageUrl,
-        certifications,
-        products,
-      });
-    } else {
-      await createBrand.mutateAsync({
-        categoryId: categoryId!,
-        name: brandName.trim(),
-        description: description.trim() || undefined,
-        imageUrl,
-        certifications,
-        products,
-      });
-    }
+    try {
+      if (isEdit && brand) {
+        await updateBrand.mutateAsync({
+          id: brand.id,
+          categoryId: categoryId!,
+          name: brandName.trim(),
+          description: description.trim() || undefined,
+          imageUrl,
+          certifications,
+          products,
+        });
+      } else {
+        await createBrand.mutateAsync({
+          categoryId: categoryId!,
+          name: brandName.trim(),
+          description: description.trim() || undefined,
+          imageUrl,
+          certifications,
+          products,
+        });
+      }
 
-    router.push('/admin/brands');
+      router.push('/admin/brands');
+    } catch {
+      setErrors({ save: '저장에 실패했습니다. 다시 시도해주세요.' });
+    }
   };
 
   const handleDelete = async () => {
@@ -431,6 +435,11 @@ export function BrandForm({ brand }: Props) {
       {/* Fixed footer */}
       <div className="fixed bottom-0 right-0 left-[224px] z-10 border-t-2 border-border-light bg-white px-8 py-4 max-lg:left-[196px] max-md:left-[182px] max-sm:left-0">
         <div className="mx-auto flex max-w-[800px] items-center justify-between">
+          {errors.save && (
+            <p className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-red-50 px-4 py-1.5 font-body text-sm text-red-500 border border-red-200">
+              {errors.save}
+            </p>
+          )}
           <div>
             {isEdit && (
               <button

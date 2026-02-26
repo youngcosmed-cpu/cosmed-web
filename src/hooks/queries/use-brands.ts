@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/api/client';
+import { api } from '@/lib/api/client';
 import { queryKeys } from '@/lib/query/query-keys';
 import type { Brand } from '@/types/brand';
 import type { PaginatedResponse } from '@/types/api';
@@ -16,7 +16,7 @@ export function useBrands(categoryId?: number) {
         params.set('cursor', String(pageParam));
       }
       const qs = params.toString();
-      const response = await apiFetch<PaginatedResponse<Brand>>(
+      const { data: response } = await api.get<PaginatedResponse<Brand>>(
         `/brands${qs ? `?${qs}` : ''}`,
       );
 

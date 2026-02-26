@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Allow public admin pages
-  if (PUBLIC_ADMIN_PATHS.some((p) => pathname.startsWith(p))) {
+  if (PUBLIC_ADMIN_PATHS.some((p) => pathname === p || pathname.startsWith(p + '/'))) {
     return NextResponse.next();
   }
 
