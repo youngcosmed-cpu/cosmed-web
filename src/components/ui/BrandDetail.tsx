@@ -234,7 +234,7 @@ export function BrandDetail({ id }: { id: number }) {
 
             {/* Brand Description */}
             {brand.description && (
-              <div className="max-w-[800px] mx-auto mb-16 text-left max-[992px]:mb-12 max-md:mb-10">
+              <div className="max-w-[800px] mx-auto mb-16 text-center max-[992px]:mb-12 max-md:mb-10 max-md:text-left">
                 <p className="text-xl font-normal leading-[1.8] text-text-strong max-[992px]:text-lg max-md:text-base whitespace-pre-line break-words">
                   {brand.description}
                 </p>
