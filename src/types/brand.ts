@@ -29,6 +29,7 @@ export interface CreateBrandPayload {
   categoryId: number;
   name: string;
   description?: string;
+  imageUrl?: string | null;
   certifications?: string[];
   products: { name: string; description?: string }[];
 }
@@ -37,6 +38,7 @@ export interface UpdateBrandPayload {
   categoryId?: number;
   name?: string;
   description?: string;
+  imageUrl?: string | null;
   certifications?: string[];
   products?: { name: string; description?: string }[];
 }

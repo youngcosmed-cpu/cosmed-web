@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCategories } from '@/hooks/queries/use-categories';
 import {
@@ -8,6 +9,7 @@ import {
   useUpdateBrand,
   useDeleteBrand,
 } from '@/hooks/mutations/use-brand-mutations';
+import { useUploadImage } from '@/hooks/mutations/use-upload-image';
 import type { Brand } from '@/types/brand';
 
 interface Model {
@@ -29,6 +31,8 @@ export function BrandForm({ brand }: Props) {
   const createBrand = useCreateBrand();
   const updateBrand = useUpdateBrand();
   const deleteBrand = useDeleteBrand();
+  const { upload, isUploading } = useUploadImage();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [categoryId, setCategoryId] = useState<number | null>(
     brand?.categoryId ?? null,
@@ -37,6 +41,9 @@ export function BrandForm({ brand }: Props) {
   const [description, setDescription] = useState(brand?.description ?? '');
   const [certifications, setCertifications] = useState<string[]>(
     brand?.certifications ?? [],
+  );
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    brand?.imageUrl ?? null,
   );
   const [certInput, setCertInput] = useState('');
   const [models, setModels] = useState<Model[]>(() => {
@@ -96,6 +103,7 @@ export function BrandForm({ brand }: Props) {
         categoryId: categoryId!,
         name: brandName.trim(),
         description: description.trim() || undefined,
+        imageUrl,
         certifications,
         products,
       });
@@ -104,6 +112,7 @@ export function BrandForm({ brand }: Props) {
         categoryId: categoryId!,
         name: brandName.trim(),
         description: description.trim() || undefined,
+        imageUrl,
         certifications,
         products,
       });
@@ -213,16 +222,63 @@ export function BrandForm({ brand }: Props) {
             />
           </div>
 
-          {/* Brand image placeholder */}
+          {/* Brand image */}
           <div>
             <label className="mb-2 block font-body text-base font-bold text-admin-dark">
               브랜드 사진
             </label>
-            <div className="flex h-24 items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input">
-              <span className="font-body text-sm text-text-disabled">
-                추후 구현
-              </span>
-            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const url = await upload(file);
+                  setImageUrl(url);
+                } catch {
+                  // error is handled by the hook
+                }
+                e.target.value = '';
+              }}
+            />
+            {isUploading ? (
+              <div className="flex h-40 items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input">
+                <span className="font-body text-sm text-text-placeholder">
+                  업로드 중...
+                </span>
+              </div>
+            ) : imageUrl ? (
+              <div className="relative inline-block">
+                <Image
+                  src={imageUrl}
+                  alt="브랜드 이미지"
+                  width={200}
+                  height={200}
+                  className="rounded-[10px] border-2 border-border-light object-cover"
+                  unoptimized
+                />
+                <button
+                  type="button"
+                  onClick={() => setImageUrl(null)}
+                  className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 font-body text-xs text-white hover:bg-red-600 transition-colors cursor-pointer border-none"
+                >
+                  &times;
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex h-40 w-full items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input hover:border-text-placeholder transition-colors cursor-pointer"
+              >
+                <span className="font-body text-sm text-text-placeholder">
+                  클릭하여 이미지 선택 (최대 5MB)
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Description */}
