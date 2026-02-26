@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { Review } from '@/types/review';
 
 interface CreateReviewPayload {
@@ -18,7 +19,7 @@ export function useCreateReview() {
       return data;
     },
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reviews', variables.brandId] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.list(variables.brandId) });
     },
   });
 }
@@ -30,9 +31,9 @@ export function useUpdateReview() {
       const { data } = await api.patch<Review>(`/reviews/${id}`, body);
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.adminReviews.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.list(data.brandId) });
     },
   });
 }
@@ -44,8 +45,8 @@ export function useDeleteReview() {
       await api.delete(`/reviews/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-reviews'] });
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.adminReviews.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.reviews.all });
     },
   });
 }

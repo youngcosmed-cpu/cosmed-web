@@ -1,11 +1,12 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { Brand } from '@/types/brand';
 import type { PaginatedResponse } from '@/types/api';
 
 export function useBrands(categoryId?: number) {
   return useInfiniteQuery({
-    queryKey: ['brands', 'list', categoryId],
+    queryKey: queryKeys.brands.list(categoryId),
     queryFn: async ({ pageParam }) => {
       const params = new URLSearchParams();
       if (typeof categoryId === 'number' && categoryId > 0) {

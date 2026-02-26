@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { InquiryListItem } from '@/types/inquiry';
 import type { PaginatedResponse } from '@/types/api';
 
@@ -10,7 +11,7 @@ interface UseInquiriesParams {
 
 export function useInquiries(params?: UseInquiriesParams) {
   return useInfiniteQuery({
-    queryKey: ['inquiries', params?.status, params?.contactMethod],
+    queryKey: queryKeys.inquiries.list(params),
     queryFn: ({ pageParam }) => {
       const searchParams = new URLSearchParams();
       if (params?.status) searchParams.set('status', params.status);

@@ -1,11 +1,12 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { AdminReview } from '@/types/review';
 import type { PaginatedResponse } from '@/types/api';
 
 export function useAdminReviews(brandId?: number) {
   return useInfiniteQuery({
-    queryKey: ['admin-reviews', brandId],
+    queryKey: queryKeys.adminReviews.list(brandId),
     queryFn: ({ pageParam }) => {
       const params = new URLSearchParams();
       if (typeof brandId === 'number') params.set('brandId', String(brandId));

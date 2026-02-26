@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { Brand, CreateBrandPayload, UpdateBrandPayload } from '@/types/brand';
 
 export function useCreateBrand() {
@@ -10,7 +11,7 @@ export function useCreateBrand() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['brands'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.brands.all });
     },
   });
 }
@@ -23,8 +24,8 @@ export function useUpdateBrand() {
       return data;
     },
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['brands'] });
-      queryClient.invalidateQueries({ queryKey: ['brands', 'detail', variables.id] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.brands.all });
+      queryClient.removeQueries({ queryKey: queryKeys.brands.detail(variables.id) });
     },
   });
 }
@@ -36,7 +37,7 @@ export function useDeleteBrand() {
       await api.delete(`/brands/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['brands'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.brands.all });
     },
   });
 }

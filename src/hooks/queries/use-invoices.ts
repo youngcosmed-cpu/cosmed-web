@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { CreateInvoicePayload, Invoice } from '@/types/invoice';
 
 export function useInvoices() {
   return useQuery({
-    queryKey: ['invoices'],
+    queryKey: queryKeys.invoices.all,
     queryFn: async () => {
       const { data } = await api.get<{ data: Invoice[] }>('/invoices');
       return data;
@@ -20,7 +21,7 @@ export function useCreateInvoice() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
     },
   });
 }
@@ -32,7 +33,7 @@ export function useDeleteInvoice() {
       await api.delete(`/invoices/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
     },
   });
 }

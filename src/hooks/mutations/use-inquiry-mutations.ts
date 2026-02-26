@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api/client';
+import { queryKeys } from '@/lib/query/query-keys';
 import type { InquiryStatus } from '@/types/inquiry';
 
 interface CreateInquiryRequest {
@@ -27,7 +28,7 @@ export function useUpdateInquiryStatus() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['inquiries'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.inquiries.all });
     },
   });
 }
