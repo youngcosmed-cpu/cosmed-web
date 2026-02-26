@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useInquiries } from '@/hooks/queries/use-inquiries';
 import { useUpdateInquiryStatus } from '@/hooks/mutations/use-inquiry-mutations';
 import type { InquiryStatus } from '@/types/inquiry';
@@ -142,9 +143,6 @@ export default function InquiriesPage() {
                   <th className="font-body text-xs uppercase tracking-wider text-text-muted text-left py-3 px-4">
                     문의 일시
                   </th>
-                  <th className="font-body text-xs uppercase tracking-wider text-text-muted text-left py-3 px-4">
-                    마지막 메시지
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -171,8 +169,18 @@ export default function InquiriesPage() {
                     </td>
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-bg-light flex items-center justify-center font-display text-xs text-admin-nav shrink-0">
-                          {inquiry.brand.name.charAt(0)}
+                        <div className="w-10 h-10 rounded-lg bg-bg-light flex items-center justify-center font-display text-xs text-admin-nav shrink-0 overflow-hidden">
+                          {inquiry.brand.imageUrl ? (
+                            <Image
+                              src={inquiry.brand.imageUrl}
+                              alt={inquiry.brand.name}
+                              width={40}
+                              height={40}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            inquiry.brand.name.charAt(0)
+                          )}
                         </div>
                         <div>
                           <p className="font-body text-sm font-semibold text-admin-dark">
@@ -202,10 +210,6 @@ export default function InquiriesPage() {
                     </td>
                     <td className="py-3.5 px-4 font-body text-sm text-text-label">
                       {formatDate(inquiry.createdAt)}
-                    </td>
-                    <td className="py-3.5 px-4 font-body text-sm text-text-label max-w-[200px] truncate">
-                      {inquiry.messages[0]?.content.substring(0, 40)}
-                      {inquiry.messages[0] ? '...' : ''}
                     </td>
                   </tr>
                 ))}
