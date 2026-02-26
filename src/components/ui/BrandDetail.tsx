@@ -40,20 +40,8 @@ export function BrandDetail({ id }: { id: number }) {
     );
   };
 
-  const getMailtoHref = () => {
-    const selectedNames =
-      brand.products
-        ?.filter((p) => selectedProducts.includes(p.id))
-        .map((p) => p.name)
-        .join(', ') ?? '';
-
-    const subject = encodeURIComponent(
-      `Wholesale Inquiry: ${brand.name}`,
-    );
-    const body = encodeURIComponent(
-      `I'm interested in ${selectedNames || brand.name}. Could you share wholesale terms and availability?`,
-    );
-    return `mailto:wholesale@youngcosmed.com?subject=${subject}&body=${body}`;
+  const handleOpenChat = () => {
+    router.push(`/chat?brandId=${id}`);
   };
 
   return (
@@ -190,16 +178,9 @@ export function BrandDetail({ id }: { id: number }) {
                     {selectedProducts.length} selected
                   </span>
                 )}
-                <a
-                  href={selectedProducts.length > 0 ? getMailtoHref() : undefined}
-                  onClick={(e) => {
-                    if (selectedProducts.length === 0) e.preventDefault();
-                  }}
-                  className={`w-full inline-flex items-center justify-center gap-4 text-lg font-semibold tracking-[0.01em] px-16 py-6 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] no-underline max-md:px-8 max-md:py-5 max-md:text-[15px] ${
-                    selectedProducts.length > 0
-                      ? 'bg-admin-dark text-white cursor-pointer hover:bg-black hover:-translate-y-[3px] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)]'
-                      : 'bg-text-disabled text-white cursor-not-allowed'
-                  }`}
+                <button
+                  onClick={handleOpenChat}
+                  className="w-full inline-flex items-center justify-center gap-4 text-lg font-semibold tracking-[0.01em] px-16 py-6 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] no-underline max-md:px-8 max-md:py-5 max-md:text-[15px] bg-admin-dark text-white cursor-pointer hover:bg-black hover:-translate-y-[3px] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)]"
                 >
                   <span>Discuss Wholesale Terms</span>
                   <svg
@@ -207,12 +188,12 @@ export function BrandDetail({ id }: { id: number }) {
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className={`w-[22px] h-[22px] transition-transform duration-300 ${selectedProducts.length > 0 ? 'group-hover:translate-x-1.5' : ''}`}
+                    className="w-[22px] h-[22px] transition-transform duration-300"
                   >
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
-                </a>
+                </button>
                 <p className="text-base font-normal text-text-muted text-center max-w-[450px] mx-auto leading-[1.5] mt-3 max-md:text-sm">
                   Ask about pricing, MOQ, certifications and global shipping.
                 </p>

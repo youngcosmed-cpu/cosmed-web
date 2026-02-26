@@ -1,20 +1,45 @@
-export type InquiryStatus = 'new' | 'reviewed' | 'responded';
+export type InquiryStatus = 'new_inquiry' | 'reviewed' | 'responded';
 export type ContactMethod = 'whatsapp' | 'email';
+export type SenderType = 'user' | 'assistant';
 
-export interface ConversationMessage {
-  type: 'user' | 'assistant';
+export interface InquiryMessage {
+  id: number;
+  inquiryId: number;
+  senderType: SenderType;
   content: string;
-  time: string;
+  createdAt: string;
 }
 
-export interface Inquiry {
+export interface InquiryListItem {
   id: number;
-  productName: string;
-  productCategory: string;
-  productImage: string;
-  status: InquiryStatus;
+  brandId: number;
   contactMethod: ContactMethod;
   contactValue: string;
-  timestamp: string;
-  conversation: ConversationMessage[];
+  status: InquiryStatus;
+  createdAt: string;
+  updatedAt: string;
+  brand: {
+    id: number;
+    name: string;
+    imageUrl: string | null;
+    category: { id: number; name: string };
+  };
+  messages: InquiryMessage[];
+}
+
+export interface InquiryDetail {
+  id: number;
+  brandId: number;
+  contactMethod: ContactMethod;
+  contactValue: string;
+  status: InquiryStatus;
+  createdAt: string;
+  updatedAt: string;
+  brand: {
+    id: number;
+    name: string;
+    imageUrl: string | null;
+    category: { id: number; name: string };
+  };
+  messages: InquiryMessage[];
 }
