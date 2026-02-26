@@ -16,10 +16,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for refresh token cookie
-  const refreshToken = request.cookies.get('refreshToken');
+  // Check for auth flag cookie (set by frontend on login)
+  const auth = request.cookies.get('auth');
 
-  if (!refreshToken) {
+  if (!auth) {
     const loginUrl = new URL('/admin/login', request.url);
     loginUrl.searchParams.set('returnUrl', pathname);
     return NextResponse.redirect(loginUrl);

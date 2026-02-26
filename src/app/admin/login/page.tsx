@@ -29,6 +29,7 @@ function LoginForm() {
         { withCredentials: true },
       );
       setAccessToken(data.accessToken);
+      document.cookie = 'auth=1; path=/; max-age=604800'; // 7 days
       const safeReturnUrl = returnUrl?.startsWith('/admin') ? returnUrl : '/admin';
       router.replace(safeReturnUrl);
     } catch (err) {

@@ -74,6 +74,7 @@ api.interceptors.response.use(
         processQueue(refreshError);
         setAccessToken(null);
         if (typeof window !== 'undefined') {
+          document.cookie = 'auth=; path=/; max-age=0';
           window.location.href = '/admin/login';
         }
         return Promise.reject(error);
