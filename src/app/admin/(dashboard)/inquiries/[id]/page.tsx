@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, use } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useInquiry } from '@/hooks/queries/use-inquiry';
 import { useUpdateInquiryStatus } from '@/hooks/mutations/use-inquiry-mutations';
@@ -75,8 +76,18 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
       <div className="grid grid-cols-[340px_1fr] gap-10 max-lg:grid-cols-[300px_1fr] max-lg:gap-7 max-md:grid-cols-1">
         {/* Left: Brand Panel */}
         <div className="bg-white border border-border-strong rounded-2xl p-8 self-start">
-          <div className="w-full aspect-square rounded-xl bg-bg-light flex items-center justify-center font-display text-2xl text-admin-nav mb-6">
-            {inquiry.brand.name}
+          <div className="w-full aspect-square rounded-xl bg-bg-light overflow-hidden relative flex items-center justify-center font-display text-2xl text-admin-nav mb-6">
+            {inquiry.brand.imageUrl ? (
+              <Image
+                src={inquiry.brand.imageUrl}
+                alt={inquiry.brand.name}
+                fill
+                sizes="340px"
+                className="object-cover"
+              />
+            ) : (
+              inquiry.brand.name
+            )}
           </div>
 
           <h3 className="font-display text-xl font-bold text-admin-dark mb-1">
