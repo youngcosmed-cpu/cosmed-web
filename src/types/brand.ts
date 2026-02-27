@@ -33,7 +33,7 @@ export interface CreateBrandPayload {
   description?: string;
   imageUrl?: string | null;
   certifications?: string[];
-  products: { name: string; description?: string }[];
+  products: { name: string; description?: string; sortOrder?: number }[];
 }
 
 export interface UpdateBrandPayload {
@@ -42,5 +42,9 @@ export interface UpdateBrandPayload {
   description?: string;
   imageUrl?: string | null;
   certifications?: string[];
-  products?: { name: string; description?: string }[];
+  products?: { name: string; description?: string; sortOrder?: number }[];
+}
+
+export interface ReorderBrandsPayload {
+  orderedIds: number[];
 }

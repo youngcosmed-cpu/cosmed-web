@@ -24,7 +24,7 @@ export interface InquiryListItem {
     imageUrl: string | null;
     category: { id: number; name: string };
   };
-  messages: InquiryMessage[];
+  messages: [] | [InquiryMessage];
 }
 
 export interface InquiryDetail {

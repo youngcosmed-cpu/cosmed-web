@@ -9,17 +9,17 @@ export const queryKeys = {
   },
   reviews: {
     all: ['reviews'] as const,
-    list: (brandId: number) => ['reviews', brandId] as const,
+    list: (brandId: number) => ['reviews', 'list', brandId] as const,
   },
   adminReviews: {
     all: ['admin-reviews'] as const,
-    list: (brandId?: number) => ['admin-reviews', brandId] as const,
+    list: (brandId?: number) => ['admin-reviews', 'list', brandId] as const,
   },
   inquiries: {
     all: ['inquiries'] as const,
     list: (params?: { status?: string; contactMethod?: string }) =>
-      ['inquiries', params?.status, params?.contactMethod] as const,
-    detail: (id: number) => ['inquiries', id] as const,
+      ['inquiries', 'list', params] as const,
+    detail: (id: number) => ['inquiries', 'detail', id] as const,
   },
   invoices: {
     all: ['invoices'] as const,

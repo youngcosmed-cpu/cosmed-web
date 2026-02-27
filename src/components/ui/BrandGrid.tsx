@@ -68,7 +68,9 @@ export function BrandGrid() {
           ) : brands.length === 0 ? (
             <EmptyState />
           ) : (
-            brands.map((brand) => <BrandCard key={brand.id} brand={brand} />)
+            brands.map((brand, index) => (
+              <BrandCard key={brand.id} brand={brand} priority={index < 6} />
+            ))
           )}
         </div>
 

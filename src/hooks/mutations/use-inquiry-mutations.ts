@@ -12,10 +12,14 @@ interface CreateInquiryRequest {
 }
 
 export function useCreateInquiry() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (body: CreateInquiryRequest) => {
       const { data } = await api.post('/inquiries', body);
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.inquiries.all });
     },
   });
 }
