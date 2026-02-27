@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { useBrands } from '@/hooks/queries/use-brands';
 import { BrandCard } from './BrandCard';
 import { EmptyState } from './EmptyState';
@@ -52,13 +51,6 @@ export function BrandGrid() {
             selected={selectedCategory}
             onSelect={setSelectedCategory}
           />
-          <Link
-            href="/chat"
-            className="inline-flex items-center gap-2 font-body text-[13px] font-normal text-white tracking-[0.02em] px-6 py-3 bg-primary border-none cursor-pointer hover:bg-admin-dark transition-all max-md:px-[18px] max-md:py-2.5 max-md:text-xs"
-          >
-            <span>Request Bulk Pricing</span>
-            <span className="text-sm transition-transform group-hover:translate-x-[3px]">→</span>
-          </Link>
         </div>
 
         {/* Grid */}

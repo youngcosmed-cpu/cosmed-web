@@ -5,7 +5,6 @@ import { serverFetch } from '@/lib/api/server';
 import { queryKeys } from '@/lib/query/query-keys';
 import { BrandGrid } from '@/components/ui/BrandGrid';
 import { WhySection } from '@/components/ui/WhySection';
-import { CtaSection } from '@/components/ui/CtaSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { PaginatedResponse } from '@/types/api';
 import type { Brand } from '@/types/brand';
@@ -41,7 +40,6 @@ export default async function HomePage() {
         <BrandGrid />
       </HydrationBoundary>
       <WhySection />
-      <CtaSection />
     </main>
   );
 }
