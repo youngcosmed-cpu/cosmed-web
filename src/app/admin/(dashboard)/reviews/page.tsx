@@ -121,7 +121,8 @@ export default function ReviewsPage() {
       {/* Data Table */}
       {!isLoading && (
         <>
-          <div className="overflow-x-auto max-sm:-mx-5 max-sm:px-5">
+          {/* Desktop Table */}
+          <div className="overflow-x-auto max-sm:hidden">
             <table className="w-full border-collapse min-w-[800px]">
               <thead>
                 <tr className="border-b border-border-strong">
@@ -196,6 +197,63 @@ export default function ReviewsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden flex flex-col gap-3">
+            {reviews.map((review) => (
+              <div
+                key={review.id}
+                className="border border-border-strong rounded-xl p-4 bg-white"
+              >
+                {/* Top: Stars + Date */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-body text-sm text-yellow-400">
+                    {renderStars(review.rating)}
+                  </span>
+                  <span className="font-body text-xs text-text-label">
+                    {formatDate(review.createdAt)}
+                  </span>
+                </div>
+
+                {/* Middle: Brand + Photo count */}
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-body text-sm font-semibold text-admin-dark">
+                    {review.brand.name}
+                  </span>
+                  {review.photos.length > 0 && (
+                    <span className="font-body text-xs text-text-label">
+                      📷 {review.photos.length}장
+                    </span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <p className="font-body text-sm text-text-strong line-clamp-2 mb-3">
+                  {review.content}
+                </p>
+
+                {/* Bottom: Actions */}
+                <div className="flex items-center justify-end gap-2">
+                  <button
+                    onClick={() => setEditingReview(review)}
+                    className="font-body text-sm text-text-label hover:text-admin-dark transition-colors cursor-pointer"
+                  >
+                    수정
+                  </button>
+                  <span className="text-border-strong">·</span>
+                  <button
+                    onClick={(e) => handleDelete(e, review.id)}
+                    disabled={deleteMutation.isPending}
+                    className="font-body text-sm text-error hover:text-red-700 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {deleteMutation.isPending && deleteMutation.variables === review.id
+                      ? '삭제 중...'
+                      : '삭제'}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Empty State */}

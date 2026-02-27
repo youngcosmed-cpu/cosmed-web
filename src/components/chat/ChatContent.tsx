@@ -303,6 +303,7 @@ function ChatContentInner() {
         onToggleProduct={handleToggleProduct}
         onStartChat={handleStartChat}
         selectedProductIds={selectedProductIds}
+        showContactForm={showContactForm}
       />
 
       {/* Contact Form */}

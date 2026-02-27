@@ -105,11 +105,11 @@ export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
       {blobUrl ? (
         <iframe
           src={blobUrl}
-          className="h-[80vh] w-full rounded-xl border border-gray-200"
+          className="h-[80vh] max-sm:h-[60vh] w-full rounded-xl border border-gray-200"
           title="Invoice Preview"
         />
       ) : (
-        <div className="flex h-[80vh] items-center justify-center rounded-xl border border-gray-200 bg-gray-50">
+        <div className="flex h-[80vh] max-sm:h-[60vh] items-center justify-center rounded-xl border border-gray-200 bg-gray-50">
           <span className="text-sm text-gray-400">PDF 생성 중...</span>
         </div>
       )}

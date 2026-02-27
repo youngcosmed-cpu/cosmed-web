@@ -194,9 +194,6 @@ export function BrandDetail({ id }: { id: number }) {
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
                 </button>
-                <p className="text-base font-normal text-text-muted text-center max-w-[450px] mx-auto leading-[1.5] mt-3 max-md:text-sm">
-                  Ask about pricing, MOQ, certifications and global shipping.
-                </p>
               </div>
             </div>
           </div>
@@ -216,13 +213,6 @@ export function BrandDetail({ id }: { id: number }) {
                     {cert}
                   </span>
                 ))}
-                {/* Medical license badge — shown for all brands in this B2B medical context */}
-                <span className="inline-flex items-center gap-2 font-body text-[13px] font-medium tracking-[0.02em] text-text-label px-6 py-3 bg-bg-light max-md:text-xs max-md:px-[18px] max-md:py-2.5">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                  Medical license required
-                </span>
               </div>
             )}
 

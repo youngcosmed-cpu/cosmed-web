@@ -22,6 +22,7 @@ interface ChatMessagesProps {
   onToggleProduct?: (productId: number) => void;
   onStartChat?: () => void;
   selectedProductIds?: number[];
+  showContactForm?: boolean;
 }
 
 export function ChatMessages({
@@ -32,12 +33,13 @@ export function ChatMessages({
   onToggleProduct,
   onStartChat,
   selectedProductIds = [],
+  showContactForm,
 }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+  }, [messages, isLoading, showContactForm]);
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-6">
@@ -136,9 +138,6 @@ export function ChatMessages({
                       onClick={() => onSelectCategory?.(category)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border-light bg-white hover:border-admin-dark hover:bg-white/80 transition-colors text-left cursor-pointer"
                     >
-                      <div className="w-10 h-10 rounded-lg bg-bg-light flex items-center justify-center font-display text-xs text-admin-nav shrink-0">
-                        {category.name.charAt(0)}
-                      </div>
                       <p className="font-body text-sm font-semibold text-admin-dark">
                         {category.name}
                       </p>

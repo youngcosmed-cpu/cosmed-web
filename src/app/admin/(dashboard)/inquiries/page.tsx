@@ -126,7 +126,8 @@ export default function InquiriesPage() {
       {/* Data Table */}
       {!isLoading && (
         <>
-          <div className="overflow-x-auto max-sm:-mx-5 max-sm:px-5">
+          {/* Desktop Table */}
+          <div className="overflow-x-auto max-sm:hidden">
             <table className="w-full border-collapse min-w-[800px]">
               <thead>
                 <tr className="border-b border-border-strong">
@@ -231,6 +232,91 @@ export default function InquiriesPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card List */}
+          <div className="sm:hidden flex flex-col gap-3">
+            {inquiries.map((inquiry) => (
+              <div
+                key={inquiry.id}
+                onClick={() => router.push(`/admin/inquiries/${inquiry.id}`)}
+                className={`border border-border-strong rounded-xl p-4 cursor-pointer active:bg-bg-light transition-colors ${
+                  inquiry.status === 'new_inquiry' ? 'bg-bg-warm-row' : 'bg-white'
+                }`}
+              >
+                {/* Top: Status + Date */}
+                <div className="flex items-center justify-between mb-3">
+                  <span
+                    className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold ${
+                      inquiry.status === 'new_inquiry'
+                        ? 'bg-status-new text-status-new-text'
+                        : inquiry.status === 'reviewed'
+                          ? 'bg-status-reviewed text-status-reviewed-text'
+                          : 'bg-status-responded text-status-responded-text'
+                    }`}
+                  >
+                    {statusLabels[inquiry.status]}
+                  </span>
+                  <span className="font-body text-xs text-text-label">
+                    {formatDate(inquiry.createdAt)}
+                  </span>
+                </div>
+
+                {/* Middle: Brand image + name/category */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-bg-light flex items-center justify-center font-display text-xs text-admin-nav shrink-0 overflow-hidden">
+                    {inquiry.brand.imageUrl ? (
+                      <Image
+                        src={inquiry.brand.imageUrl}
+                        alt={inquiry.brand.name}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      inquiry.brand.name.charAt(0)
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-body text-sm font-semibold text-admin-dark">
+                      {inquiry.brand.name}
+                    </p>
+                    <p className="font-body text-xs text-text-placeholder">
+                      {inquiry.brand.category.name}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom: Contact method + value + delete */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold shrink-0 ${
+                        inquiry.contactMethod === 'whatsapp'
+                          ? 'bg-contact-whatsapp text-contact-whatsapp-text'
+                          : 'bg-contact-email text-text-strong'
+                      }`}
+                    >
+                      {inquiry.contactMethod === 'whatsapp'
+                        ? 'WhatsApp'
+                        : 'Email'}
+                    </span>
+                    <span className="font-body text-sm text-text-strong truncate">
+                      {inquiry.contactValue}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => handleDelete(e, inquiry.id)}
+                    disabled={deleteMutation.isPending}
+                    className="font-body text-sm text-error hover:text-red-700 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 ml-2"
+                  >
+                    {deleteMutation.isPending && deleteMutation.variables === inquiry.id
+                      ? '삭제 중...'
+                      : '삭제'}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Empty State */}

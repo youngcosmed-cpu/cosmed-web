@@ -17,7 +17,7 @@ interface CiFields {
 }
 
 interface InvoiceFormProps {
-  onGenerate: (data: InvoicePdfData) => void;
+  onGenerate: (data: InvoicePdfData) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -71,6 +71,11 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
   };
 
   const handleGenerate = () => {
+    if (!buyer.name.trim()) {
+      alert('바이어 이름을 입력해주세요');
+      return;
+    }
+
     const pdfItems = items
       .filter((item) => item.product)
       .map((item) => ({
@@ -78,6 +83,11 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
         quantity: parseFloat(item.qty) || 0,
         unitPrice: parseFloat(item.price) || 0,
       }));
+
+    if (pdfItems.length === 0) {
+      alert('제품을 하나 이상 입력해주세요');
+      return;
+    }
 
     onGenerate({
       type: invoiceType,
@@ -164,7 +174,8 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
       {/* Product Items */}
       <section className="rounded-xl border border-gray-200 bg-white p-5">
         <h3 className="mb-4 text-sm font-semibold text-gray-900">제품 목록</h3>
-        <div className="overflow-x-auto">
+        {/* Desktop Table */}
+        <div className="overflow-x-auto max-sm:hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
@@ -226,6 +237,62 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Card List */}
+        <div className="sm:hidden flex flex-col gap-3">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className="rounded-lg border border-gray-200 bg-gray-50 p-3 space-y-2"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-400">#{index + 1}</span>
+                {items.length > 1 && (
+                  <button
+                    type="button"
+                    className="text-gray-400 hover:text-red-500 text-lg leading-none"
+                    onClick={() => removeItem(index)}
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+              <input
+                type="text"
+                className="w-full rounded border border-gray-200 px-2.5 py-2 text-sm focus:border-gray-400 focus:outline-none"
+                value={item.product}
+                onChange={(e) => updateItem(index, 'product', e.target.value)}
+                placeholder="제품명"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="mb-0.5 block text-xs text-gray-500">수량</label>
+                  <input
+                    type="number"
+                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm focus:border-gray-400 focus:outline-none"
+                    value={item.qty}
+                    onChange={(e) => updateItem(index, 'qty', e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label className="mb-0.5 block text-xs text-gray-500">단가 (US$)</label>
+                  <input
+                    type="number"
+                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm focus:border-gray-400 focus:outline-none"
+                    value={item.price}
+                    onChange={(e) => updateItem(index, 'price', e.target.value)}
+                    placeholder="0"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              <div className="text-right text-sm font-medium tabular-nums text-gray-700">
+                소계: US$ {formatCurrency(getSubtotal(item))}
+              </div>
+            </div>
+          ))}
         </div>
         <button
           type="button"

@@ -6,10 +6,10 @@ import { AuthProvider } from '@/lib/auth/AuthProvider';
 import { useAuth } from '@/lib/auth/useAuth';
 
 const menuItems = [
-  { href: '/admin/inquiries', label: '문의 확인' },
-  { href: '/admin/brands', label: '제품 등록/수정' },
-  { href: '/admin/reviews', label: '리뷰 관리' },
-  { href: '/admin/invoices', label: '인보이스 생성' },
+  { href: '/admin/inquiries', label: '문의 확인', shortLabel: '문의' },
+  { href: '/admin/brands', label: '제품 등록/수정', shortLabel: '제품' },
+  { href: '/admin/reviews', label: '리뷰 관리', shortLabel: '리뷰' },
+  { href: '/admin/invoices', label: '인보이스 생성', shortLabel: '인보이스' },
 ];
 
 function DashboardHeader() {
@@ -89,10 +89,36 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <main className="ml-[224px] flex-1 min-h-screen bg-bg-admin flex flex-col max-lg:ml-[196px] max-md:ml-[182px] max-sm:ml-0">
         <DashboardHeader />
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto max-sm:pb-16">
           {children}
         </div>
       </main>
+
+      {/* Mobile bottom navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-10 flex bg-admin-dark sm:hidden">
+        {menuItems.map((item) => {
+          const isActive = pathname.startsWith(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex-1 py-3 text-center font-body text-[13px] font-semibold no-underline transition-all duration-200 ${
+                isActive
+                  ? 'bg-white text-admin-dark'
+                  : 'text-admin-nav'
+              }`}
+            >
+              {item.shortLabel}
+            </Link>
+          );
+        })}
+        <Link
+          href="/"
+          className="flex-1 py-3 text-center font-body text-[13px] font-semibold no-underline transition-all duration-200 text-admin-nav border-l border-white/20"
+        >
+          홈
+        </Link>
+      </nav>
     </div>
   );
 }
