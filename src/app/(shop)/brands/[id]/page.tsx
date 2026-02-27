@@ -25,7 +25,7 @@ export async function generateMetadata({
     const title = brand.name;
     const description =
       brand.description ||
-      `${brand.name} — medical aesthetic products available for B2B wholesale at Young Cosmed.`;
+      `${brand.name} — medical aesthetic products available at Young Cosmed.`;
 
     return {
       title,

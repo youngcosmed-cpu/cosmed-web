@@ -15,6 +15,7 @@ export interface InquiryListItem {
   brandId: number;
   contactMethod: ContactMethod;
   contactValue: string;
+  countryCode: string | null;
   status: InquiryStatus;
   createdAt: string;
   updatedAt: string;
@@ -32,6 +33,7 @@ export interface InquiryDetail {
   brandId: number;
   contactMethod: ContactMethod;
   contactValue: string;
+  countryCode: string | null;
   status: InquiryStatus;
   createdAt: string;
   updatedAt: string;

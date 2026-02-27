@@ -174,10 +174,18 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
                 {inquiry.contactMethod === 'whatsapp' ? 'WhatsApp' : 'Email'}
               </span>
               <p className="font-body text-base font-bold text-admin-dark mb-3">
-                {inquiry.contactValue}
+                {inquiry.countryCode
+                  ? `${inquiry.countryCode} ${inquiry.contactValue}`
+                  : inquiry.contactValue}
               </p>
               <button
-                onClick={() => handleCopy(inquiry.contactValue)}
+                onClick={() =>
+                  handleCopy(
+                    inquiry.countryCode
+                      ? `${inquiry.countryCode} ${inquiry.contactValue}`
+                      : inquiry.contactValue,
+                  )
+                }
                 className="bg-white border border-border-medium rounded-lg px-4 py-2 font-body text-xs font-semibold text-text-strong hover:border-admin-dark hover:text-admin-dark transition-colors cursor-pointer"
               >
                 {copied ? '복사됨!' : '복사'}

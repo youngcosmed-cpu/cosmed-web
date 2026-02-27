@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export function Footer() {
   return (
     <footer className="bg-primary border-t border-white/[0.08] pt-15 pb-10">
@@ -84,6 +86,12 @@ export function Footer() {
             >
               Instagram
             </a>
+            <Link
+              href="/admin"
+              className="text-xs font-light tracking-[0.02em] text-white/30 no-underline hover:text-white transition-colors"
+            >
+              Dashboard
+            </Link>
           </div>
         </div>
       </div>

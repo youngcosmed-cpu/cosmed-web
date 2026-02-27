@@ -34,7 +34,7 @@ export default async function HomePage() {
           name: 'Young Cosmed',
           url: SITE_URL,
           description:
-            'K-Beauty B2B wholesale platform for medical aesthetic products. Fillers, skin boosters, and more from trusted Korean manufacturers.',
+            'K-Beauty platform for medical aesthetic products. Fillers, skin boosters, and more from trusted Korean manufacturers.',
         }}
       />
       <HydrationBoundary state={dehydrate(queryClient)}>

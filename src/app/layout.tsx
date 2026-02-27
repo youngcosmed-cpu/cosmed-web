@@ -25,11 +25,9 @@ export const metadata: Metadata = {
     template: '%s | Young Cosmed',
   },
   description:
-    'K-Beauty B2B wholesale platform for medical aesthetic products. Fillers, skin boosters, and more from trusted Korean manufacturers.',
+    'K-Beauty platform for medical aesthetic products. Fillers, skin boosters, and more from trusted Korean manufacturers.',
   keywords: [
     'K-Beauty',
-    'B2B',
-    'wholesale',
     'medical aesthetics',
     'fillers',
     'skin boosters',

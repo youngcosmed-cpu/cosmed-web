@@ -250,7 +250,7 @@ function ChatContentInner() {
     [selectedBrandId, messages, sendMessage],
   );
 
-  const handleSubmitContact = (method: 'whatsapp' | 'email', value: string) => {
+  const handleSubmitContact = (method: 'whatsapp' | 'email', value: string, countryCode?: string) => {
     if (!selectedBrandId) return;
 
     const finalProductIds = selectedProductIds.length > 0 ? selectedProductIds : urlProductIds;
@@ -260,6 +260,7 @@ function ChatContentInner() {
         brand_id: selectedBrandId,
         contact_method: method,
         contact_value: value,
+        ...(countryCode && { country_code: countryCode }),
         messages: messages
           .filter((m) => m.content)
           .map((m) => ({ sender_type: m.sender_type, content: m.content })),

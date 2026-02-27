@@ -7,6 +7,7 @@ interface CreateInquiryRequest {
   brand_id: number;
   contact_method: 'whatsapp' | 'email';
   contact_value: string;
+  country_code?: string;
   messages: { sender_type: 'user' | 'assistant'; content: string }[];
   product_ids?: number[];
 }

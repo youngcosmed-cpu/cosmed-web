@@ -4,19 +4,41 @@ import { useState } from 'react';
 
 type ContactMethod = 'whatsapp' | 'email';
 
+const COUNTRY_CODES = [
+  { code: '+62', label: '🇮🇩 Indonesia (+62)' },
+  { code: '+82', label: '🇰🇷 Korea (+82)' },
+  { code: '+81', label: '🇯🇵 Japan (+81)' },
+  { code: '+1', label: '🇺🇸 USA (+1)' },
+  { code: '+86', label: '🇨🇳 China (+86)' },
+  { code: '+65', label: '🇸🇬 Singapore (+65)' },
+  { code: '+60', label: '🇲🇾 Malaysia (+60)' },
+  { code: '+66', label: '🇹🇭 Thailand (+66)' },
+  { code: '+63', label: '🇵🇭 Philippines (+63)' },
+  { code: '+84', label: '🇻🇳 Vietnam (+84)' },
+  { code: '+91', label: '🇮🇳 India (+91)' },
+  { code: '+44', label: '🇬🇧 UK (+44)' },
+  { code: '+49', label: '🇩🇪 Germany (+49)' },
+  { code: '+33', label: '🇫🇷 France (+33)' },
+  { code: '+61', label: '🇦🇺 Australia (+61)' },
+];
+
 interface ContactFormProps {
-  onSubmit: (method: ContactMethod, value: string) => void;
+  onSubmit: (method: ContactMethod, value: string, countryCode?: string) => void;
   isLoading: boolean;
 }
 
 export function ContactForm({ onSubmit, isLoading }: ContactFormProps) {
   const [method, setMethod] = useState<ContactMethod>('whatsapp');
   const [value, setValue] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+
+  const isWhatsApp = method === 'whatsapp';
+  const canSubmit = value.trim() && !isLoading && (!isWhatsApp || countryCode);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!value.trim() || isLoading) return;
-    onSubmit(method, value.trim());
+    if (!canSubmit) return;
+    onSubmit(method, value.trim(), isWhatsApp ? countryCode : undefined);
   };
 
   return (
@@ -73,17 +95,32 @@ export function ContactForm({ onSubmit, isLoading }: ContactFormProps) {
               </label>
             </div>
 
+            {isWhatsApp && (
+              <select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                className="w-full border border-border-strong rounded-lg px-3 py-2.5 text-sm outline-none focus:border-admin-dark transition-colors bg-white"
+              >
+                <option value="">Select country code</option>
+                {COUNTRY_CODES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            )}
+
             <input
               type={method === 'email' ? 'email' : 'tel'}
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder={method === 'whatsapp' ? '+1 555-0123' : 'you@example.com'}
+              placeholder={method === 'whatsapp' ? '812-3456-7890' : 'you@example.com'}
               className="w-full border border-border-strong rounded-lg px-3 py-2.5 text-sm outline-none focus:border-admin-dark transition-colors"
             />
 
             <button
               type="submit"
-              disabled={isLoading || !value.trim()}
+              disabled={!canSubmit}
               className="w-full bg-admin-dark text-white rounded-lg py-3 text-sm font-semibold transition-colors hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isLoading ? 'Submitting...' : 'Submit'}

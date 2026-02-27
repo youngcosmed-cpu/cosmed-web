@@ -9,7 +9,7 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         </Link>
         {!minimal && (
           <>
-            <nav className="flex gap-12 ml-auto mr-12 max-md:hidden max-[992px]:gap-8">
+            <nav className="flex gap-12 ml-auto max-md:hidden max-[992px]:gap-8">
               <a href="#products" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors">
                 Products
               </a>
@@ -20,12 +20,6 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
                 Contact
               </a>
             </nav>
-            <Link
-              href="/admin"
-              className="text-sm font-medium text-text-secondary no-underline hover:text-primary transition-colors max-md:text-xs"
-            >
-              Dashboard
-            </Link>
           </>
         )}
       </div>
