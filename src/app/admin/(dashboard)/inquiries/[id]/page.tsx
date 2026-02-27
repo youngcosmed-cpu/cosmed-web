@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useInquiry } from '@/hooks/queries/use-inquiry';
 import { useUpdateInquiryStatus } from '@/hooks/mutations/use-inquiry-mutations';
+import { useToast } from '@/hooks/use-toast';
 import type { InquiryStatus } from '@/types/inquiry';
 
 const statusLabels: Record<InquiryStatus, string> = {
@@ -39,6 +40,7 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
   const router = useRouter();
   const { data: inquiry, isLoading } = useInquiry(Number(id));
   const updateStatus = useUpdateInquiryStatus();
+  const toast = useToast();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (value: string) => {
@@ -49,7 +51,13 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
 
   const handleUpdateStatus = (status: InquiryStatus) => {
     if (!inquiry) return;
-    updateStatus.mutate({ id: inquiry.id, status });
+    updateStatus.mutate(
+      { id: inquiry.id, status },
+      {
+        onSuccess: () => toast.success(`상태가 "${statusLabels[status]}"(으)로 변경되었습니다`),
+        onError: () => toast.error('상태 변경에 실패했습니다'),
+      },
+    );
   };
 
   if (isLoading || !inquiry) {
@@ -108,13 +116,16 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
                   <button
                     key={status}
                     onClick={() => handleUpdateStatus(status)}
-                    className={`flex-1 py-2.5 px-3 rounded-lg font-body text-xs font-medium transition-colors cursor-pointer ${
+                    disabled={updateStatus.isPending}
+                    className={`flex-1 py-2.5 px-3 rounded-lg font-body text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                       inquiry.status === status
                         ? 'bg-admin-dark text-white font-semibold'
                         : 'bg-white border border-border-strong text-text-strong hover:border-text-placeholder'
                     }`}
                   >
-                    {statusLabels[status]}
+                    {updateStatus.isPending && updateStatus.variables?.status === status
+                      ? '변경 중...'
+                      : statusLabels[status]}
                   </button>
                 ),
               )}

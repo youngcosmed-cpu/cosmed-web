@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useInquiries } from '@/hooks/queries/use-inquiries';
-import { useUpdateInquiryStatus } from '@/hooks/mutations/use-inquiry-mutations';
+import { useDeleteInquiry } from '@/hooks/mutations/use-inquiry-mutations';
+import { useToast } from '@/hooks/use-toast';
 import type { InquiryStatus } from '@/types/inquiry';
 
 type FilterType = 'all' | 'newOnly' | 'whatsapp' | 'email';
@@ -48,7 +49,8 @@ export default function InquiriesPage() {
   const queryParams = getQueryParams(filter);
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
     useInquiries(queryParams);
-  const updateStatus = useUpdateInquiryStatus();
+  const deleteMutation = useDeleteInquiry();
+  const toast = useToast();
 
   const inquiries = data?.pages.flatMap((p) => p.data) ?? [];
 
@@ -58,13 +60,13 @@ export default function InquiriesPage() {
     responded: inquiries.filter((i) => i.status === 'responded').length,
   };
 
-  const handleUpdateStatus = (
-    e: React.MouseEvent,
-    id: number,
-    status: InquiryStatus,
-  ) => {
+  const handleDelete = (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
-    updateStatus.mutate({ id, status });
+    if (!confirm('이 문의를 삭제하시겠습니까?')) return;
+    deleteMutation.mutate(id, {
+      onSuccess: () => toast.success('문의가 삭제되었습니다'),
+      onError: () => toast.error('문의 삭제에 실패했습니다'),
+    });
   };
 
   return (
@@ -143,6 +145,9 @@ export default function InquiriesPage() {
                   <th className="font-body text-xs uppercase tracking-wider text-text-muted text-left py-3 px-4">
                     문의 일시
                   </th>
+                  <th className="font-body text-xs uppercase tracking-wider text-text-muted text-left py-3 px-4">
+                    작업
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -210,6 +215,17 @@ export default function InquiriesPage() {
                     </td>
                     <td className="py-3.5 px-4 font-body text-sm text-text-label">
                       {formatDate(inquiry.createdAt)}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <button
+                        onClick={(e) => handleDelete(e, inquiry.id)}
+                        disabled={deleteMutation.isPending}
+                        className="font-body text-sm text-error hover:text-red-700 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        {deleteMutation.isPending && deleteMutation.variables === inquiry.id
+                          ? '삭제 중...'
+                          : '삭제'}
+                      </button>
                     </td>
                   </tr>
                 ))}

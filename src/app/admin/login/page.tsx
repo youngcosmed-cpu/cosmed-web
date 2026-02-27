@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import axios from 'axios';
-import { API_URL, setAccessToken } from '@/lib/api/client';
+import { api, setAccessToken } from '@/lib/api/client';
 import { Header } from '@/components/layout/Header';
 
 function LoginForm() {
@@ -23,13 +23,8 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${API_URL}/auth/login`,
-        { email, password },
-        { withCredentials: true },
-      );
+      const { data } = await api.post('/auth/login', { email, password });
       setAccessToken(data.accessToken);
-      document.cookie = 'auth=1; path=/; max-age=604800'; // 7 days
       const safeReturnUrl = returnUrl?.startsWith('/admin') ? returnUrl : '/admin';
       router.replace(safeReturnUrl);
     } catch (err) {

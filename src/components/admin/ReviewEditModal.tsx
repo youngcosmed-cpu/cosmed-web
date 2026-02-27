@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useUpdateReview } from '@/hooks/mutations/use-review-mutations';
+import { useToast } from '@/hooks/use-toast';
 import type { AdminReview } from '@/types/review';
 
 interface ReviewEditModalProps {
@@ -14,6 +15,7 @@ export function ReviewEditModal({ review, onClose }: ReviewEditModalProps) {
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState('');
   const updateMutation = useUpdateReview();
+  const toast = useToast();
 
   useEffect(() => {
     if (review) {
@@ -29,7 +31,13 @@ export function ReviewEditModal({ review, onClose }: ReviewEditModalProps) {
     if (!trimmed || rating < 1 || rating > 5) return;
     updateMutation.mutate(
       { id: review.id, rating, content: trimmed },
-      { onSuccess: onClose },
+      {
+        onSuccess: () => {
+          toast.success('리뷰가 수정되었습니다');
+          onClose();
+        },
+        onError: () => toast.error('리뷰 수정에 실패했습니다'),
+      },
     );
   };
 

@@ -5,6 +5,7 @@ import { useAdminReviews } from '@/hooks/queries/use-admin-reviews';
 import { useBrands } from '@/hooks/queries/use-brands';
 import { useDeleteReview } from '@/hooks/mutations/use-review-mutations';
 import { ReviewEditModal } from '@/components/admin/ReviewEditModal';
+import { useToast } from '@/hooks/use-toast';
 import type { AdminReview } from '@/types/review';
 
 function formatDate(iso: string) {
@@ -30,6 +31,7 @@ export default function ReviewsPage() {
     useAdminReviews(selectedBrandId);
   const { data: brandsData } = useBrands();
   const deleteMutation = useDeleteReview();
+  const toast = useToast();
 
   const reviews = data?.pages.flatMap((p) => p.data) ?? [];
   const brands = brandsData?.pages.flatMap((p) => p.data) ?? [];
@@ -46,7 +48,10 @@ export default function ReviewsPage() {
   const handleDelete = (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
     if (!confirm('이 리뷰를 삭제하시겠습니까?')) return;
-    deleteMutation.mutate(id);
+    deleteMutation.mutate(id, {
+      onSuccess: () => toast.success('리뷰가 삭제되었습니다'),
+      onError: () => toast.error('리뷰 삭제에 실패했습니다'),
+    });
   };
 
   return (
@@ -181,7 +186,9 @@ export default function ReviewsPage() {
                           disabled={deleteMutation.isPending}
                           className="font-body text-sm text-error hover:text-red-700 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                         >
-                          삭제
+                          {deleteMutation.isPending && deleteMutation.variables === review.id
+                            ? '삭제 중...'
+                            : '삭제'}
                         </button>
                       </div>
                     </td>

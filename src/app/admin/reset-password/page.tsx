@@ -3,8 +3,8 @@
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
-import { API_URL } from '@/lib/api/client';
+import { isAxiosError } from 'axios';
+import { api } from '@/lib/api/client';
 
 function RequestForm() {
   const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ function RequestForm() {
     setIsLoading(true);
 
     try {
-      await axios.post(`${API_URL}/auth/password-reset/request`, { email });
+      await api.post('/auth/password-reset/request', { email });
       setMessage('비밀번호 재설정 링크가 이메일로 발송되었습니다.');
     } catch {
       setError('요청 처리 중 오류가 발생했습니다. 잠시 후 다시 시도하세요.');
@@ -104,13 +104,13 @@ function ConfirmForm({ token }: { token: string }) {
     setIsLoading(true);
 
     try {
-      await axios.post(`${API_URL}/auth/password-reset/confirm`, {
+      await api.post('/auth/password-reset/confirm', {
         token,
         newPassword,
       });
       setMessage('비밀번호가 변경되었습니다. 새 비밀번호로 로그인하세요.');
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
+      if (isAxiosError(err) && err.response?.status === 401) {
         setError('유효하지 않거나 만료된 링크입니다. 다시 요청하세요.');
       } else {
         setError('비밀번호 변경 중 오류가 발생했습니다.');

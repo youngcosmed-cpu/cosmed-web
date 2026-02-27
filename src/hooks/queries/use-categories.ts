@@ -46,6 +46,42 @@ export function useUpdateCategory() {
   });
 }
 
+export function useReorderCategories() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderedIds: number[]) => {
+      await api.patch('/categories/reorder', { orderedIds });
+    },
+    onMutate: async (orderedIds) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.categories.all });
+      const previous =
+        queryClient.getQueryData<{ data: Category[] }>(
+          queryKeys.categories.all,
+        );
+      if (previous) {
+        const reordered = orderedIds
+          .map((id, index) => {
+            const cat = previous.data.find((c) => c.id === id);
+            return cat ? { ...cat, sortOrder: index } : null;
+          })
+          .filter((c): c is Category => c !== null);
+        queryClient.setQueryData(queryKeys.categories.all, {
+          data: reordered,
+        });
+      }
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKeys.categories.all, context.previous);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories.all });
+    },
+  });
+}
+
 export function useDeleteCategory() {
   const queryClient = useQueryClient();
   return useMutation({

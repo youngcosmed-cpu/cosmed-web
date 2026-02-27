@@ -32,3 +32,15 @@ export function useUpdateInquiryStatus() {
     },
   });
 }
+
+export function useDeleteInquiry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: number) => {
+      await api.delete(`/inquiries/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.inquiries.all });
+    },
+  });
+}

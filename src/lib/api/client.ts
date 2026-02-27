@@ -1,15 +1,17 @@
 import axios from 'axios';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
 // Access Token — module-scope variable (not in localStorage for XSS defense)
 let accessToken: string | null = null;
 export function getAccessToken() { return accessToken; }
 export function setAccessToken(token: string | null) { accessToken = token; }
 
 export const api = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
+  baseURL: '/api',
+});
+
+// Separate instance without interceptors (prevents recursive refresh loops)
+const rawApi = axios.create({
+  baseURL: '/api',
 });
 
 // Request interceptor: inject Access Token
@@ -39,6 +41,11 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
+export function resetRefreshState() {
+  isRefreshing = false;
+  failedQueue = [];
+}
+
 // Response interceptor: refresh on 401 and retry
 api.interceptors.response.use(
   (response) => response,
@@ -61,11 +68,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(
-          `${API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
+        const { data } = await rawApi.post('/auth/refresh');
         setAccessToken(data.accessToken);
         processQueue(null, data.accessToken);
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
@@ -74,7 +77,6 @@ api.interceptors.response.use(
         processQueue(refreshError);
         setAccessToken(null);
         if (typeof window !== 'undefined') {
-          document.cookie = 'auth=; path=/; max-age=0';
           window.location.href = '/admin/login';
         }
         return Promise.reject(error);
@@ -86,4 +88,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-

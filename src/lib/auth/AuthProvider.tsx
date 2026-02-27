@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, getAccessToken, setAccessToken } from '@/lib/api/client';
+import { api, getAccessToken, setAccessToken, resetRefreshState } from '@/lib/api/client';
 
 interface Admin {
   id: number;
@@ -41,7 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAdmin(meData);
       } catch {
         setAccessToken(null);
-        document.cookie = 'auth=; path=/; max-age=0';
         router.replace('/admin/login');
       } finally {
         setIsLoading(false);
@@ -59,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setAccessToken(null);
       setAdmin(null);
-      document.cookie = 'auth=; path=/; max-age=0';
+      resetRefreshState();
       router.replace('/admin/login');
     }
   }, [router]);

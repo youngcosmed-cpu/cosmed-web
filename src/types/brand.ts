@@ -2,6 +2,7 @@ export interface Category {
   id: number;
   name: string;
   sortOrder: number;
+  _count?: { brands: number };
 }
 
 export interface Product {
@@ -19,6 +20,7 @@ export interface Brand {
   description: string | null;
   imageUrl: string | null;
   certifications: string[];
+  sortOrder: number;
   createdAt: string;
   updatedAt: string;
   category: Category;

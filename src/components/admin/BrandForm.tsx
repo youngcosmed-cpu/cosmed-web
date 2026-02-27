@@ -10,6 +10,7 @@ import {
   useDeleteBrand,
 } from '@/hooks/mutations/use-brand-mutations';
 import { useUploadImage } from '@/hooks/mutations/use-upload-image';
+import { useToast } from '@/hooks/use-toast';
 import type { Brand } from '@/types/brand';
 
 interface Model {
@@ -28,12 +29,14 @@ export function BrandForm({ brand }: Props) {
   const { data: categoryData } = useCategories();
   const categories = categoryData?.data ?? [];
 
+  const toast = useToast();
   const createBrand = useCreateBrand();
   const updateBrand = useUpdateBrand();
   const deleteBrand = useDeleteBrand();
   const { upload, isUploading } = useUploadImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const modelDescriptionRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
   const [categoryId, setCategoryId] = useState<number | null>(
     brand?.categoryId ?? null,
@@ -60,6 +63,13 @@ export function BrandForm({ brand }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const isSaving = createBrand.isPending || updateBrand.isPending;
   const isDeleting = deleteBrand.isPending;
+
+  const adjustModelDescriptionHeight = (index: number) => {
+    const el = modelDescriptionRefs.current[index];
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  };
 
   const adjustDescriptionHeight = () => {
     if (!descriptionRef.current) return;
@@ -138,9 +148,18 @@ export function BrandForm({ brand }: Props) {
 
   const handleDelete = async () => {
     if (!brand) return;
-    if (!window.confirm(`"${brand.name}" 브랜드를 삭제하시겠습니까?`)) return;
-    await deleteBrand.mutateAsync(brand.id);
-    router.push('/admin/brands');
+    if (!window.confirm(`"${brand.name}" 브랜드를 삭제하시겠습니까?\n\n관련된 제품, 리뷰, 문의가 모두 삭제됩니다.`)) return;
+    try {
+      await deleteBrand.mutateAsync(brand.id);
+      toast.success('브랜드가 삭제되었습니다');
+      router.push('/admin/brands');
+    } catch (err) {
+      const message =
+        err instanceof Error && 'response' in err
+          ? (err as any).response?.data?.message
+          : undefined;
+      toast.error(message ?? '브랜드 삭제에 실패했습니다');
+    }
   };
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
@@ -407,14 +426,17 @@ export function BrandForm({ brand }: Props) {
                       <label className="mb-1 block font-body text-sm text-text-label">
                         설명
                       </label>
-                      <input
-                        type="text"
+                      <textarea
+                        ref={(el) => {
+                          modelDescriptionRefs.current[index] = el;
+                        }}
                         value={model.description}
-                        onChange={(e) =>
-                          updateModel(index, 'description', e.target.value)
-                        }
+                        onChange={(e) => {
+                          updateModel(index, 'description', e.target.value);
+                          adjustModelDescriptionHeight(index);
+                        }}
                         placeholder="예: 1.1ml, Deep layer filler with lidocaine"
-                        className="w-full rounded-lg border-2 border-border-strong px-3.5 py-2.5 font-body text-sm text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
+                        className="w-full resize-none overflow-hidden rounded-lg border-2 border-border-strong px-3.5 py-2.5 font-body text-sm text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
                       />
                     </div>
                   </div>

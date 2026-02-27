@@ -16,10 +16,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for auth flag cookie (set by frontend on login)
-  const auth = request.cookies.get('auth');
+  // Check for refreshToken httpOnly cookie (set by server via proxy)
+  const refreshToken = request.cookies.get('refreshToken');
 
-  if (!auth) {
+  if (!refreshToken) {
     const loginUrl = new URL('/admin/login', request.url);
     loginUrl.searchParams.set('returnUrl', pathname);
     return NextResponse.redirect(loginUrl);

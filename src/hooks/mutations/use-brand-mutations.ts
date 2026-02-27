@@ -30,6 +30,18 @@ export function useUpdateBrand() {
   });
 }
 
+export function useReorderBrands() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderedIds: number[]) => {
+      await api.patch('/brands/reorder', { orderedIds });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.brands.all });
+    },
+  });
+}
+
 export function useDeleteBrand() {
   const queryClient = useQueryClient();
   return useMutation({
