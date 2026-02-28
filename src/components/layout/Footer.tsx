@@ -11,7 +11,7 @@ export function Footer() {
               Young Cosmed
             </div>
             <p className="text-[13px] font-light tracking-[0.02em] text-text-muted">
-              Medical Aesthetic Products — B2B Wholesale
+              Medical Aesthetic Products
             </p>
           </div>
           <nav className="flex gap-8 max-md:gap-6">
@@ -61,10 +61,10 @@ export function Footer() {
               Email
             </span>
             <a
-              href="mailto:wholesale@youngcosmed.com"
+              href="mailto:youngcosmed@gmail.com"
               className="font-body text-[13px] font-normal text-text-muted no-underline hover:text-white transition-colors"
             >
-              wholesale@youngcosmed.com
+              youngcosmed@gmail.com
             </a>
           </div>
         </div>
