@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAdminReviews } from '@/hooks/queries/use-admin-reviews';
 import { useBrands } from '@/hooks/queries/use-brands';
+import { useCategories } from '@/hooks/queries/use-categories';
 import { useDeleteReview } from '@/hooks/mutations/use-review-mutations';
 import { ReviewEditModal } from '@/components/admin/ReviewEditModal';
 import { useToast } from '@/hooks/use-toast';
@@ -25,16 +26,19 @@ export default function ReviewsPage() {
   const [selectedBrandId, setSelectedBrandId] = useState<number | undefined>(
     undefined,
   );
+  const [expandedCategoryId, setExpandedCategoryId] = useState<number | null>(null);
   const [editingReview, setEditingReview] = useState<AdminReview | null>(null);
 
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
     useAdminReviews(selectedBrandId);
   const { data: brandsData } = useBrands();
+  const { data: categoriesData } = useCategories();
   const deleteMutation = useDeleteReview();
   const toast = useToast();
 
   const reviews = data?.pages.flatMap((p) => p.data) ?? [];
   const brands = brandsData?.pages.flatMap((p) => p.data) ?? [];
+  const categories = categoriesData?.data ?? [];
 
   const stats = {
     total: reviews.length,
@@ -84,31 +88,69 @@ export default function ReviewsPage() {
         </div>
       </div>
 
-      {/* Brand Filter */}
-      <div className="flex items-center gap-3 flex-wrap mb-6">
-        <button
-          onClick={() => setSelectedBrandId(undefined)}
-          className={`px-3.5 py-2 rounded-lg font-body text-sm transition-colors cursor-pointer ${
-            selectedBrandId === undefined
-              ? 'bg-admin-dark text-white font-semibold'
-              : 'bg-white border border-border-strong text-text-label hover:border-text-placeholder'
-          }`}
-        >
-          전체
-        </button>
-        {brands.map((brand) => (
+      {/* Category → Brand Filter */}
+      <div className="mb-6 space-y-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
-            key={brand.id}
-            onClick={() => setSelectedBrandId(brand.id)}
+            onClick={() => {
+              setSelectedBrandId(undefined);
+              setExpandedCategoryId(null);
+            }}
             className={`px-3.5 py-2 rounded-lg font-body text-sm transition-colors cursor-pointer ${
-              selectedBrandId === brand.id
+              selectedBrandId === undefined
                 ? 'bg-admin-dark text-white font-semibold'
                 : 'bg-white border border-border-strong text-text-label hover:border-text-placeholder'
             }`}
           >
-            {brand.name}
+            전체
           </button>
-        ))}
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() =>
+                setExpandedCategoryId((prev) => (prev === cat.id ? null : cat.id))
+              }
+              className={`px-3.5 py-2 rounded-lg font-body text-sm transition-colors cursor-pointer flex items-center gap-1.5 ${
+                expandedCategoryId === cat.id
+                  ? 'bg-admin-dark text-white font-semibold'
+                  : 'bg-white border border-border-strong text-text-label hover:border-text-placeholder'
+              }`}
+            >
+              {cat.name}
+              <svg
+                className={`w-3.5 h-3.5 transition-transform ${expandedCategoryId === cat.id ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          ))}
+        </div>
+        {expandedCategoryId !== null && (
+          <div className="flex items-center gap-2 flex-wrap pl-2 border-l-2 border-gray-200 ml-2">
+            {brands
+              .filter((b) => b.categoryId === expandedCategoryId)
+              .map((brand) => (
+                <button
+                  key={brand.id}
+                  onClick={() => setSelectedBrandId(brand.id)}
+                  className={`px-3 py-1.5 rounded-md font-body text-xs transition-colors cursor-pointer ${
+                    selectedBrandId === brand.id
+                      ? 'bg-gray-700 text-white font-semibold'
+                      : 'bg-gray-50 border border-border-light text-text-label hover:border-text-placeholder'
+                  }`}
+                >
+                  {brand.name}
+                </button>
+              ))}
+            {brands.filter((b) => b.categoryId === expandedCategoryId).length === 0 && (
+              <span className="font-body text-xs text-text-muted">해당 카테고리에 제품이 없습니다.</span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Loading State */}
