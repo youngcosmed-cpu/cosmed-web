@@ -132,7 +132,7 @@ export default function ReviewsPage() {
         {expandedCategoryId !== null && (
           <div className="flex items-center gap-2 flex-wrap pl-2 border-l-2 border-gray-200 ml-2">
             {brands
-              .filter((b) => b.categoryId === expandedCategoryId)
+              .filter((b) => b.categories?.some((c) => c.id === expandedCategoryId))
               .map((brand) => (
                 <button
                   key={brand.id}
@@ -146,7 +146,7 @@ export default function ReviewsPage() {
                   {brand.name}
                 </button>
               ))}
-            {brands.filter((b) => b.categoryId === expandedCategoryId).length === 0 && (
+            {brands.filter((b) => b.categories?.some((c) => c.id === expandedCategoryId)).length === 0 && (
               <span className="font-body text-xs text-text-muted">해당 카테고리에 제품이 없습니다.</span>
             )}
           </div>

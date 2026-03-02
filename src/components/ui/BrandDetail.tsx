@@ -42,7 +42,7 @@ export function BrandDetail({ id }: { id: number }) {
     router.push(`/chat?${params.toString()}`);
   };
 
-  const categoryName = brand.category?.name ?? 'GENERAL';
+  const categoryName = brand.categories?.map((c) => c.name).join(' / ') || 'GENERAL';
 
   return (
     <div

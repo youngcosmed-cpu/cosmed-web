@@ -95,7 +95,7 @@ function SortableBrandCard({ brand }: { brand: Brand }) {
             {brand.name}
           </p>
           <p className="font-body text-xs text-text-placeholder mt-1">
-            {brand.category?.name}
+            {brand.categories?.map((c) => c.name).join(', ')}
           </p>
         </div>
       </Link>

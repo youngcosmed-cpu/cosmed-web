@@ -3,8 +3,10 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/query/get-query-client';
 import { serverFetch } from '@/lib/api/server';
 import { queryKeys } from '@/lib/query/query-keys';
+import { LandingHero } from '@/components/ui/LandingHero';
 import { BrandGrid } from '@/components/ui/BrandGrid';
 import { WhySection } from '@/components/ui/WhySection';
+import { ContactCTA } from '@/components/ui/ContactCTA';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { PaginatedResponse } from '@/types/api';
 import type { Brand } from '@/types/brand';
@@ -26,6 +28,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <LandingHero />
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -40,6 +43,7 @@ export default async function HomePage() {
         <BrandGrid />
       </HydrationBoundary>
       <WhySection />
+      <ContactCTA />
     </main>
   );
 }

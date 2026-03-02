@@ -15,7 +15,6 @@ export interface Product {
 
 export interface Brand {
   id: number;
-  categoryId: number;
   name: string;
   description: string | null;
   imageUrl: string | null;
@@ -23,12 +22,12 @@ export interface Brand {
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
-  category: Category;
+  categories: Category[];
   products?: Product[];
 }
 
 export interface CreateBrandPayload {
-  categoryId: number;
+  categoryIds: number[];
   name: string;
   description?: string;
   imageUrl?: string | null;
@@ -37,7 +36,7 @@ export interface CreateBrandPayload {
 }
 
 export interface UpdateBrandPayload {
-  categoryId?: number;
+  categoryIds?: number[];
   name?: string;
   description?: string;
   imageUrl?: string | null;

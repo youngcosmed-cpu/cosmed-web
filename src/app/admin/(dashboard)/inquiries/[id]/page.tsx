@@ -102,7 +102,7 @@ export default function InquiryDetailPage({ params }: InquiryDetailPageProps) {
             {inquiry.brand.name}
           </h3>
           <p className="font-body text-sm text-text-muted mb-8">
-            {inquiry.brand.category.name}
+            {inquiry.brand.categories?.map((c) => c.name).join(', ')}
           </p>
 
           {/* Status Buttons */}

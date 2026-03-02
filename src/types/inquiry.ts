@@ -23,7 +23,7 @@ export interface InquiryListItem {
     id: number;
     name: string;
     imageUrl: string | null;
-    category: { id: number; name: string };
+    categories: { id: number; name: string }[];
   };
   messages: [] | [InquiryMessage];
 }
@@ -41,7 +41,7 @@ export interface InquiryDetail {
     id: number;
     name: string;
     imageUrl: string | null;
-    category: { id: number; name: string };
+    categories: { id: number; name: string }[];
   };
   messages: InquiryMessage[];
   products: { id: number; name: string; description: string | null }[];

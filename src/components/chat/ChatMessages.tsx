@@ -65,7 +65,7 @@ export function ChatMessages({
                     </div>
                   )}
                   <div>
-                    <span className="text-xs text-text-muted">{msg.brandCard.category.name}</span>
+                    <span className="text-xs text-text-muted">{msg.brandCard.categories?.map((c) => c.name).join(', ')}</span>
                     <h4 className="font-display text-base font-bold text-admin-dark">
                       {msg.brandCard.name}
                     </h4>

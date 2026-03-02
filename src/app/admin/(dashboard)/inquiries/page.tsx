@@ -193,7 +193,7 @@ export default function InquiriesPage() {
                             {inquiry.brand.name}
                           </p>
                           <p className="font-body text-xs text-text-placeholder">
-                            {inquiry.brand.category.name}
+                            {inquiry.brand.categories?.map((c) => c.name).join(', ')}
                           </p>
                         </div>
                       </div>
@@ -282,7 +282,7 @@ export default function InquiriesPage() {
                       {inquiry.brand.name}
                     </p>
                     <p className="font-body text-xs text-text-placeholder">
-                      {inquiry.brand.category.name}
+                      {inquiry.brand.categories?.map((c) => c.name).join(', ')}
                     </p>
                   </div>
                 </div>

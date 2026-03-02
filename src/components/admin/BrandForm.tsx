@@ -38,8 +38,8 @@ export function BrandForm({ brand }: Props) {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const modelDescriptionRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
-  const [categoryId, setCategoryId] = useState<number | null>(
-    brand?.categoryId ?? null,
+  const [categoryIds, setCategoryIds] = useState<number[]>(
+    brand?.categories?.map((c) => c.id) ?? [],
   );
   const [brandName, setBrandName] = useState(brand?.name ?? '');
   const [description, setDescription] = useState(brand?.description ?? '');
@@ -99,7 +99,7 @@ export function BrandForm({ brand }: Props) {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!categoryId) newErrors.category = '카테고리를 선택해주세요';
+    if (categoryIds.length === 0) newErrors.category = '카테고리를 선택해주세요';
     if (!brandName.trim()) newErrors.brandName = '브랜드명은 필수입니다';
     const hasValidModel = models.some((m) => m.name.trim());
     if (!hasValidModel)
@@ -122,7 +122,7 @@ export function BrandForm({ brand }: Props) {
       if (isEdit && brand) {
         await updateBrand.mutateAsync({
           id: brand.id,
-          categoryId: categoryId!,
+          categoryIds,
           name: brandName.trim(),
           description: description.trim() || undefined,
           imageUrl,
@@ -131,7 +131,7 @@ export function BrandForm({ brand }: Props) {
         });
       } else {
         await createBrand.mutateAsync({
-          categoryId: categoryId!,
+          categoryIds,
           name: brandName.trim(),
           description: description.trim() || undefined,
           imageUrl,
@@ -162,7 +162,7 @@ export function BrandForm({ brand }: Props) {
     }
   };
 
-  const selectedCategory = categories.find((c) => c.id === categoryId);
+  const selectedCategories = categories.filter((c) => categoryIds.includes(c.id));
 
   return (
     <div className="relative min-h-full pb-24">
@@ -180,7 +180,7 @@ export function BrandForm({ brand }: Props) {
           {isEdit && brand ? (
             <>
               <span className="rounded-md bg-admin-dark px-3 py-1 font-body text-xs font-semibold text-white">
-                {brand.category?.name}
+                {brand.categories?.map((c) => c.name).join(', ')}
               </span>
               <span className="font-display text-[22px] font-bold text-admin-dark">
                 {brand.name} 수정 중
@@ -211,13 +211,17 @@ export function BrandForm({ brand }: Props) {
                   key={cat.id}
                   type="button"
                   onClick={() => {
-                    setCategoryId(cat.id);
+                    setCategoryIds((prev) =>
+                      prev.includes(cat.id)
+                        ? prev.filter((id) => id !== cat.id)
+                        : [...prev, cat.id],
+                    );
                     if (errors.category) {
                       setErrors((prev) => ({ ...prev, category: '' }));
                     }
                   }}
                   className={`rounded-[10px] border-2 px-4 py-3.5 font-body text-base font-semibold transition-colors cursor-pointer ${
-                    categoryId === cat.id
+                    categoryIds.includes(cat.id)
                       ? 'border-admin-dark bg-admin-dark text-white'
                       : 'border-border-strong bg-white text-text-label hover:border-text-placeholder'
                   }`}
