@@ -26,13 +26,13 @@ api.interceptors.request.use((config) => {
 // [H1] Refresh queue pattern to prevent race conditions
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (token: string | null) => void;
+  resolve: (token: string) => void;
   reject: (error: unknown) => void;
 }> = [];
 
-const processQueue = (error: unknown, token: string | null = null) => {
+const processQueue = (error: unknown, token?: string) => {
   failedQueue.forEach(({ resolve, reject }) => {
-    if (error) {
+    if (error || !token) {
       reject(error);
     } else {
       resolve(token);
@@ -46,6 +46,34 @@ export function resetRefreshState() {
   failedQueue = [];
 }
 
+// Shared refresh function — ensures only one refresh request is in-flight at a time.
+// Used by both the response interceptor and AuthProvider.initAuth.
+export function performRefresh(): Promise<string> {
+  if (isRefreshing) {
+    return new Promise<string>((resolve, reject) => {
+      failedQueue.push({ resolve, reject });
+    });
+  }
+
+  isRefreshing = true;
+
+  return rawApi
+    .post('/auth/refresh')
+    .then(({ data }) => {
+      setAccessToken(data.accessToken);
+      processQueue(null, data.accessToken);
+      return data.accessToken as string;
+    })
+    .catch((error) => {
+      processQueue(error);
+      setAccessToken(null);
+      throw error;
+    })
+    .finally(() => {
+      isRefreshing = false;
+    });
+}
+
 // Response interceptor: refresh on 401 and retry
 api.interceptors.response.use(
   (response) => response,
@@ -54,35 +82,17 @@ api.interceptors.response.use(
 
     const isAuthEndpoint = originalRequest.url?.startsWith('/auth/');
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
-      if (isRefreshing) {
-        // Another refresh is in progress — queue this request
-        originalRequest._retry = true;
-        return new Promise<string | null>((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        }).then((token) => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return api(originalRequest);
-        });
-      }
-
       originalRequest._retry = true;
-      isRefreshing = true;
 
       try {
-        const { data } = await rawApi.post('/auth/refresh');
-        setAccessToken(data.accessToken);
-        processQueue(null, data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        const token = await performRefresh();
+        originalRequest.headers.Authorization = `Bearer ${token}`;
         return api(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError);
-        setAccessToken(null);
+      } catch {
         if (typeof window !== 'undefined') {
           window.location.href = '/admin/login';
         }
         return Promise.reject(error);
-      } finally {
-        isRefreshing = false;
       }
     }
 

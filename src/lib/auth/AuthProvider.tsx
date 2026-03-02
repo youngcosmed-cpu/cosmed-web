@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, getAccessToken, setAccessToken, resetRefreshState } from '@/lib/api/client';
+import { api, getAccessToken, setAccessToken, resetRefreshState, performRefresh } from '@/lib/api/client';
 
 interface Admin {
   id: number;
@@ -33,8 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         // If no access token in memory (e.g. page refresh), try to refresh
         if (!getAccessToken()) {
-          const { data: refreshData } = await api.post('/auth/refresh');
-          setAccessToken(refreshData.accessToken);
+          await performRefresh();
         }
 
         const { data: meData } = await api.get('/auth/me');
