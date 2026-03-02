@@ -8,25 +8,29 @@ const SITE_URL = process.env.SITE_URL || 'https://youngcosmed.com';
 export const revalidate = 3600;
 
 async function fetchAllBrands(): Promise<Brand[]> {
-  const brands: Brand[] = [];
-  let cursor: number | undefined;
+  try {
+    const brands: Brand[] = [];
+    let cursor: number | undefined;
 
-  for (;;) {
-    const params = new URLSearchParams();
-    if (cursor !== undefined) params.set('cursor', String(cursor));
+    for (;;) {
+      const params = new URLSearchParams();
+      if (cursor !== undefined) params.set('cursor', String(cursor));
 
-    const path = `/brands${params.size > 0 ? `?${params}` : ''}`;
-    const res = await serverFetch<PaginatedResponse<Brand>>(path, {
-      revalidate: 3600,
-    });
+      const path = `/brands${params.size > 0 ? `?${params}` : ''}`;
+      const res = await serverFetch<PaginatedResponse<Brand>>(path, {
+        revalidate: 3600,
+      });
 
-    brands.push(...res.data);
+      brands.push(...res.data);
 
-    if (res.nextCursor === null) break;
-    cursor = res.nextCursor;
+      if (res.nextCursor === null) break;
+      cursor = res.nextCursor;
+    }
+
+    return brands;
+  } catch {
+    return [];
   }
-
-  return brands;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -313,7 +313,7 @@ export function BrandForm({ brand }: Props) {
                 className="flex h-40 w-full items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input hover:border-text-placeholder transition-colors cursor-pointer"
               >
                 <span className="font-body text-sm text-text-placeholder">
-                  클릭하여 이미지 선택 (최대 10MB)
+                  클릭하여 이미지 선택 (최대 20MB)
                 </span>
               </button>
             )}
