@@ -16,6 +16,9 @@ export function LandingHero() {
       {/* Warm light overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EF]/25 via-transparent to-[#F5F2EF]/70" />
 
+      {/* Bottom fade into body-bg for seamless transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-body-bg" />
+
       {/* Content */}
       <div className="relative z-10 text-center">
         <p
