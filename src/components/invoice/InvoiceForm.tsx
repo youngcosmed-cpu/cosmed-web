@@ -11,9 +11,11 @@ interface FormItem {
 interface CiFields {
   portOfLoading: string;
   destination: string;
-  packages: string;
+  width: string;
+  height: string;
+  depth: string;
   weight: string;
-  hsCode: string;
+  cartons: string;
 }
 
 interface InvoiceFormProps {
@@ -33,9 +35,11 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
   const [ciFields, setCiFields] = useState<CiFields>({
     portOfLoading: 'KOREA',
     destination: '',
-    packages: '',
+    width: '',
+    height: '',
+    depth: '',
     weight: '',
-    hsCode: '',
+    cartons: '',
   });
 
   const getSubtotal = (item: FormItem) => {
@@ -203,7 +207,7 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                   <td className="py-2 px-1">
                     <input
                       type="number"
-                      className="w-full rounded border border-gray-200 px-2 py-1.5 text-center text-sm focus:border-gray-400 focus:outline-none"
+                      className="w-full rounded border border-gray-200 px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-gray-400 focus:outline-none"
                       value={item.qty}
                       onChange={(e) => updateItem(index, 'qty', e.target.value)}
                       placeholder="0"
@@ -212,7 +216,7 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                   <td className="py-2 px-1">
                     <input
                       type="number"
-                      className="w-full rounded border border-gray-200 px-2 py-1.5 text-center text-sm focus:border-gray-400 focus:outline-none"
+                      className="w-full rounded border border-gray-200 px-2 py-1.5 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-gray-400 focus:outline-none"
                       value={item.price}
                       onChange={(e) => updateItem(index, 'price', e.target.value)}
                       placeholder="0"
@@ -270,7 +274,7 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                   <label className="mb-0.5 block text-xs text-gray-500">수량</label>
                   <input
                     type="number"
-                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm focus:border-gray-400 focus:outline-none"
+                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-gray-400 focus:outline-none"
                     value={item.qty}
                     onChange={(e) => updateItem(index, 'qty', e.target.value)}
                     placeholder="0"
@@ -280,7 +284,7 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                   <label className="mb-0.5 block text-xs text-gray-500">단가 (US$)</label>
                   <input
                     type="number"
-                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm focus:border-gray-400 focus:outline-none"
+                    className="w-full rounded border border-gray-200 px-2.5 py-1.5 text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-gray-400 focus:outline-none"
                     value={item.price}
                     onChange={(e) => updateItem(index, 'price', e.target.value)}
                     placeholder="0"
@@ -323,7 +327,7 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
             <label className="mb-1 block text-xs text-gray-500">US$</label>
             <input
               type="number"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-gray-500 focus:outline-none"
               value={shipping.cost}
               onChange={(e) =>
                 setShipping((p) => ({ ...p, cost: e.target.value }))
@@ -335,23 +339,15 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
         </div>
       </section>
 
-      {/* Total */}
-      <div className="flex items-center justify-between rounded-xl bg-gray-900 px-6 py-4 text-white">
-        <span className="text-sm font-medium">TOTAL</span>
-        <span className="text-lg font-bold tabular-nums">
-          US$ {formatCurrency(grandTotal)}
-        </span>
-      </div>
-
       {/* CI-only fields */}
       {invoiceType === 'CI' && (
-        <section className="rounded-xl border border-amber-200 bg-amber-50 p-5">
+        <section className="rounded-xl border border-gray-200 bg-white p-5">
           <h3 className="mb-4 text-sm font-semibold text-gray-900">
             CI 추가 정보
           </h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs text-gray-500">출발항</label>
+              <label className="mb-1 block text-xs text-gray-500">출발</label>
               <input
                 type="text"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
@@ -359,10 +355,11 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                 onChange={(e) =>
                   setCiFields((p) => ({ ...p, portOfLoading: e.target.value }))
                 }
+                placeholder="예: KOREA"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-gray-500">도착지</label>
+              <label className="mb-1 block text-xs text-gray-500">도착</label>
               <input
                 type="text"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
@@ -373,20 +370,48 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                 placeholder="예: Bangkok, Thailand"
               />
             </div>
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-4">
             <div>
-              <label className="mb-1 block text-xs text-gray-500">패키지</label>
+              <label className="mb-1 block text-xs text-gray-500">가로 (cm)</label>
               <input
                 type="text"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
-                value={ciFields.packages}
+                value={ciFields.width}
                 onChange={(e) =>
-                  setCiFields((p) => ({ ...p, packages: e.target.value }))
+                  setCiFields((p) => ({ ...p, width: e.target.value }))
                 }
-                placeholder="예: 3 cartons"
+                placeholder="40"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-gray-500">무게</label>
+              <label className="mb-1 block text-xs text-gray-500">세로 (cm)</label>
+              <input
+                type="text"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+                value={ciFields.height}
+                onChange={(e) =>
+                  setCiFields((p) => ({ ...p, height: e.target.value }))
+                }
+                placeholder="30"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-gray-500">높이 (cm)</label>
+              <input
+                type="text"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+                value={ciFields.depth}
+                onChange={(e) =>
+                  setCiFields((p) => ({ ...p, depth: e.target.value }))
+                }
+                placeholder="20"
+              />
+            </div>
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-xs text-gray-500">무게 (kg)</label>
               <input
                 type="text"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
@@ -394,24 +419,32 @@ export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps)
                 onChange={(e) =>
                   setCiFields((p) => ({ ...p, weight: e.target.value }))
                 }
-                placeholder="예: 15.5 kg"
+                placeholder="예: 15.5"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-gray-500">HS코드</label>
+              <label className="mb-1 block text-xs text-gray-500">Carton 개수</label>
               <input
                 type="text"
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
-                value={ciFields.hsCode}
+                value={ciFields.cartons}
                 onChange={(e) =>
-                  setCiFields((p) => ({ ...p, hsCode: e.target.value }))
+                  setCiFields((p) => ({ ...p, cartons: e.target.value }))
                 }
-                placeholder="예: 3304.99"
+                placeholder="예: 3"
               />
             </div>
           </div>
         </section>
       )}
+
+      {/* Total */}
+      <div className="flex items-center justify-between rounded-xl bg-gray-900 px-6 py-4 text-white">
+        <span className="text-sm font-medium">TOTAL</span>
+        <span className="text-lg font-bold tabular-nums">
+          US$ {formatCurrency(grandTotal)}
+        </span>
+      </div>
 
       {/* Generate Button */}
       <div className="flex justify-end">

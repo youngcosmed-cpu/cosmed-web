@@ -13,18 +13,20 @@ export interface InvoicePdfData {
   ciFields?: {
     portOfLoading: string;
     destination: string;
-    packages: string;
+    width: string;
+    height: string;
+    depth: string;
     weight: string;
-    hsCode: string;
+    cartons: string;
   };
 }
 
 const COMPANY_INFO = {
   name: 'eun young Kwak',
   company: 'YOUNG COSMED',
-  address: '69, Seongsui-ro, Seongdong-gu, Seoul, Republic of Korea',
+  address: '#1603, 118, Seongsui-ro, Seongdong-gu, Seoul',
   tel: '+82-10-1234-5678',
-  email: 'info@youngcosmed.com',
+  email: 'youngcosmed@gmail.com',
 };
 
 const BANK_INFO = {
@@ -62,6 +64,32 @@ async function loadFonts(): Promise<{ regular: string; bold: string }> {
   return fontCache;
 }
 
+/* ── Stamp image cache ── */
+let stampCache: { company: string; ceo: string } | null = null;
+
+async function loadStampImages(): Promise<{ company: string; ceo: string }> {
+  if (stampCache) return stampCache;
+
+  const toDataUrl = async (path: string) => {
+    const buf = await fetch(path).then((r) => r.arrayBuffer());
+    const bytes = new Uint8Array(buf);
+    const chunks: string[] = [];
+    const CHUNK = 8192;
+    for (let i = 0; i < bytes.length; i += CHUNK) {
+      chunks.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
+    }
+    return 'data:image/png;base64,' + btoa(chunks.join(''));
+  };
+
+  const [company, ceo] = await Promise.all([
+    toDataUrl('/stamps/company-stamp.png'),
+    toDataUrl('/stamps/ceo-stamp.png'),
+  ]);
+
+  stampCache = { company, ceo };
+  return stampCache;
+}
+
 function formatCurrency(num: number): string {
   return num.toLocaleString('en-US', {
     minimumFractionDigits: 0,
@@ -72,7 +100,10 @@ function formatCurrency(num: number): string {
 export async function generateInvoicePdf(
   data: InvoicePdfData,
 ): Promise<Blob> {
-  const fonts = await loadFonts();
+  const [fonts, stamps] = await Promise.all([
+    loadFonts(),
+    data.type === 'CI' ? loadStampImages() : Promise.resolve(null),
+  ]);
 
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -146,15 +177,18 @@ export async function generateInvoicePdf(
     doc.line(margin, y, pageWidth - margin, y);
     y += 5;
 
+    const dimensions =
+      ci.width || ci.height || ci.depth
+        ? `${ci.width || '-'} x ${ci.height || '-'} x ${ci.depth || '-'} cm`
+        : '-';
     const ciInfo = [
       ['Port of Loading:', ci.portOfLoading],
       ['Destination:', ci.destination || '-'],
-      ['Packages:', ci.packages || '-'],
-      ['Weight:', ci.weight || '-'],
+      ['Dimensions:', dimensions],
+      ['Weight:', ci.weight ? `${ci.weight} kg` : '-'],
+      ['Cartons:', ci.cartons || '-'],
+      ['HS Code:', '3304.99'],
     ];
-    if (ci.hsCode) {
-      ciInfo.push(['HS Code:', ci.hsCode]);
-    }
 
     ciInfo.forEach(([label, value]) => {
       doc.setFont(FONT, 'bold');
@@ -232,18 +266,19 @@ export async function generateInvoicePdf(
   });
   y += 10;
 
-  /* ── Payment Terms ── */
+  /* ── Payment Terms + Signature ── */
   doc.setDrawColor(229, 231, 235);
   doc.setLineWidth(0.3);
   doc.line(margin, y, pageWidth - margin, y);
-  y += 6;
+  const sectionY = y + 6;
 
+  /* Left: Payment Terms */
   doc.setFont(FONT, 'bold');
   doc.setFontSize(9);
-  doc.text('Payment Terms', margin, y);
-  y += 5;
+  doc.text('Payment Terms', margin, sectionY);
 
   doc.setFont(FONT, 'normal');
+  let payY = sectionY + 5;
   const paymentLines = [
     `Payment: ${BANK_INFO.payment}`,
     `Bank: ${BANK_INFO.bank}`,
@@ -251,19 +286,33 @@ export async function generateInvoicePdf(
     `Swift: ${BANK_INFO.swift}`,
   ];
   paymentLines.forEach((line) => {
-    doc.text(line, margin, y);
-    y += 4.5;
+    doc.text(line, margin, payY);
+    payY += 4.5;
   });
-  y += 8;
 
-  /* ── Signature ── */
+  /* Right: Signature + Stamps (same baseline as payment) */
+  let sigY = sectionY;
   doc.setFont(FONT, 'normal');
   doc.setFontSize(9);
-  doc.text(`${BANK_INFO.holder}, CEO`, pageWidth - margin, y, {
+  doc.text(`${BANK_INFO.holder}, CEO`, pageWidth - margin, sigY, {
     align: 'right',
   });
-  y += 4.5;
-  doc.text(COMPANY_INFO.company, pageWidth - margin, y, { align: 'right' });
+  sigY += 4.5;
+  doc.text(COMPANY_INFO.company, pageWidth - margin, sigY, { align: 'right' });
+
+  if (data.type === 'CI' && stamps) {
+    const stampSize = 30;
+    const ceoW = 36;
+    const ceoH = 18;
+    const stampX = pageWidth - margin - stampSize + 5;
+    const stampY = sigY + 3;
+    const ceoX = stampX - ceoW - 2;
+    const ceoY = stampY + (stampSize - ceoH) / 2;
+    doc.addImage(stamps.ceo, 'PNG', ceoX, ceoY, ceoW, ceoH);
+    doc.addImage(stamps.company, 'PNG', stampX, stampY, stampSize, stampSize);
+  }
+
+  y = Math.max(payY, sigY + 35);
 
   return doc.output('blob');
 }

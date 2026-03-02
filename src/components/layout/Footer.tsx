@@ -53,7 +53,7 @@ export function Footer() {
               Address
             </span>
             <span className="font-body text-[13px] font-normal text-text-muted">
-              69, Seongsui-ro, Seongdong-gu, Seoul, Republic of Korea
+              #1603, 118, Seongsui-ro, Seongdong-gu, Seoul
             </span>
           </div>
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
