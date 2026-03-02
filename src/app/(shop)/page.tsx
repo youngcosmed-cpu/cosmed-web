@@ -3,6 +3,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/query/get-query-client';
 import { serverFetch } from '@/lib/api/server';
 import { queryKeys } from '@/lib/query/query-keys';
+import { LandingHero } from '@/components/ui/LandingHero';
 import { BrandGrid } from '@/components/ui/BrandGrid';
 import { WhySection } from '@/components/ui/WhySection';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -26,6 +27,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <LandingHero />
       <JsonLd
         data={{
           '@context': 'https://schema.org',

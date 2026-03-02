@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89622c5f-7854-4b4c-b692-c7432d1b4152" name="변경" comment="x">
-      <change beforePath="$PROJECT_DIR$/src/app/admin/(dashboard)/reviews/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/admin/(dashboard)/reviews/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/invoice/InvoiceForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/invoice/InvoiceForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/invoice/generate-invoice-pdf.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/invoice/generate-invoice-pdf.ts" afterDir="false" />
+    <list default="true" id="89622c5f-7854-4b4c-b692-c7432d1b4152" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/public/예시사진/배경.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/ContactCTA.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ui/LandingHero.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(shop)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(shop)/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +50,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;uiux&quot;,
     &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
