@@ -43,7 +43,7 @@ export function BrandGrid() {
     .filter(Boolean);
 
   return (
-    <section className="pt-25 pb-20 bg-body-bg max-md:pt-20 max-md:pb-15 max-[992px]:pt-[90px]" id="products">
+    <section className="pt-6 pb-20 bg-body-bg max-md:pt-4 max-md:pb-15" id="products">
       <div className="max-w-[1400px] mx-auto px-15 max-md:px-6 max-[992px]:px-10">
         {/* Header */}
         <div className="flex justify-between items-center mb-10 max-md:flex-col max-md:items-start max-md:gap-5 max-md:mb-6 max-[992px]:gap-5">

@@ -5,6 +5,7 @@ import { serverFetch } from '@/lib/api/server';
 import { queryKeys } from '@/lib/query/query-keys';
 import { BrandGrid } from '@/components/ui/BrandGrid';
 import { WhySection } from '@/components/ui/WhySection';
+import { HeroSection } from '@/components/ui/HeroSection';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { PaginatedResponse } from '@/types/api';
 import type { Brand } from '@/types/brand';
@@ -36,6 +37,7 @@ export default async function HomePage() {
             'K-Beauty platform for medical aesthetic products. Fillers, skin boosters, and more from trusted Korean manufacturers.',
         }}
       />
+      <HeroSection />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <BrandGrid />
       </HydrationBoundary>
