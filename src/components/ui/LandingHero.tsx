@@ -5,12 +5,12 @@ export function LandingHero() {
     <section className="relative h-dvh min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <Image
-        src="/images/hero-bg.jpeg"
+        src="/images/hero-bg.webp"
         alt=""
         fill
         priority
+        sizes="100vw"
         className="object-cover object-center"
-        quality={90}
       />
 
       {/* Warm light overlay */}

@@ -296,7 +296,6 @@ export function BrandForm({ brand }: Props) {
                   width={200}
                   height={200}
                   className="rounded-[10px] border-2 border-border-light object-cover"
-                  unoptimized
                 />
                 <button
                   type="button"
