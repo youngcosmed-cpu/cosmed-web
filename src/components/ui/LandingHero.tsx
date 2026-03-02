@@ -28,16 +28,17 @@ export function LandingHero() {
           className="font-display text-[72px] font-semibold tracking-[-0.02em] leading-[1.1] text-primary mb-8 max-md:text-[38px] max-lg:text-[52px]"
           style={{ animation: 'fadeSlideUp 0.8s ease-out 0.15s both' }}
         >
-          Precision You Trust,
+          Powering Korean
           <br />
-          Beauty That Lasts
+          Aesthetics Worldwide
         </h1>
         <p
           className="font-body text-lg font-normal leading-relaxed text-text-strong max-w-[520px] mx-auto mb-12 max-md:text-base max-md:mb-8 max-md:px-6"
           style={{ animation: 'fadeSlideUp 0.8s ease-out 0.3s both' }}
         >
-          From OEM manufacturing to globally trusted aesthetic brands,
-          we supply premium Korean products to partners across 30+ countries.
+          From OEM to globally trusted aesthetic brands —
+          <br />
+          premium Korean products, delivered to 30+ countries.
         </p>
         <div
           style={{ animation: 'fadeSlideUp 0.8s ease-out 0.45s both' }}
