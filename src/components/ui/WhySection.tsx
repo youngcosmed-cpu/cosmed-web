@@ -2,26 +2,64 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+// Minimal line-style icons (32-40px, dark gray)
+const GlobeIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="18" r="14" />
+    <ellipse cx="18" cy="18" rx="6" ry="14" />
+    <path d="M4 18h28" />
+    <path d="M6 10h24" />
+    <path d="M6 26h24" />
+  </svg>
+);
+
+const ChatIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 8h24a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12l-6 5V10a2 2 0 0 1 2-2z" />
+    <path d="M12 15h12" />
+    <path d="M12 19h8" />
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 4l4.5 9.5L33 15l-7.5 7 2 10.5L18 27l-9.5 5.5 2-10.5L3 15l10.5-1.5L18 4z" />
+  </svg>
+);
+
+const ShippingIcon = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 8h20v16H4z" />
+    <path d="M24 14h6l4 5v5h-10V14z" />
+    <circle cx="10" cy="26" r="3" />
+    <circle cx="28" cy="26" r="3" />
+  </svg>
+);
+
 const whyCards = [
   {
+    icon: GlobeIcon,
     number: '30+',
-    title: 'Global-Ready Products',
-    desc: 'Export-ready formulations and packaging compliant with international regulations.',
+    title: 'Countries Trading',
+    desc: 'We actively supply Korean aesthetic products to buyers in more than 30 countries worldwide.',
   },
   {
-    number: '200+',
-    title: 'Clear MOQ & Pricing',
-    desc: 'Transparent wholesale conditions with no hidden costs or complicated tiers.',
-  },
-  {
+    icon: ChatIcon,
     number: '24h',
-    title: 'Direct Communication',
-    desc: 'No middleman. Direct response from our sourcing team within 24 hours.',
+    title: 'Response Support',
+    desc: 'Our team responds to buyer inquiries within 24 hours regardless of time zone.',
   },
   {
+    icon: StarIcon,
     number: '100%',
-    title: 'Curated Selection',
-    desc: 'Only verified Korean medical aesthetic products from trusted manufacturers.',
+    title: 'Exclusive Product Access',
+    desc: 'We supply selected products that are difficult to source through general distributors.',
+  },
+  {
+    icon: ShippingIcon,
+    number: 'Global',
+    title: 'Flexible Shipping Options',
+    desc: 'Shipping methods can be arranged based on buyer preference and logistics conditions.',
   },
 ];
 
@@ -84,7 +122,9 @@ export function WhySection() {
 
         {/* Cards Grid - 4 columns desktop, 2 tablet, 1 mobile */}
         <div className="grid grid-cols-4 gap-10 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-6">
-          {whyCards.map((card, index) => (
+          {whyCards.map((card, index) => {
+            const IconComponent = card.icon;
+            return (
             <div
               key={index}
               style={{
@@ -112,15 +152,10 @@ export function WhySection() {
                   target.style.boxShadow = 'none';
                 }}
               >
-                {/* Accent Line */}
-                <div
-                  style={{
-                    width: '40px',
-                    height: '3px',
-                    backgroundColor: '#C9B9A6',
-                    marginBottom: '16px',
-                  }}
-                />
+                {/* Icon */}
+                <div style={{ color: '#3D3D3D', marginBottom: '20px' }}>
+                  <IconComponent />
+                </div>
 
                 {/* Number - 48px, bold */}
                 <span
@@ -159,7 +194,8 @@ export function WhySection() {
                 </p>
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
 
         {/* Bottom Divider */}
