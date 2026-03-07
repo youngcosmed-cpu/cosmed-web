@@ -1,20 +1,51 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+const heroImages = [
+  '/images/랜딩 1..png',
+  '/images/랜딩 2..jpg',
+  '/images/랜딩 3..png',
+  '/images/랜딩 4..jpg',
+];
 
 export function LandingHero() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000); // 6s duration
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative h-dvh min-h-[600px] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <Image
-        src="/images/hero-bg.webp"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover object-center"
-      />
+      {/* Background Slideshow */}
+      {heroImages.map((src, index) => (
+        <Image
+          key={src}
+          src={src}
+          alt=""
+          fill
+          priority={index === 0}
+          sizes="100vw"
+          className="object-cover object-center"
+          style={{
+            opacity: currentIndex === index ? 1 : 0,
+            transition: 'opacity 1.5s ease-in-out',
+          }}
+        />
+      ))}
 
-      {/* Warm light overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F5F2EF]/25 via-transparent to-[#F5F2EF]/70" />
+      {/* Warm light overlay for text readability */}
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: 'rgba(245,242,238,0.45)' }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#F5F2EF]/80" />
 
       {/* Bottom fade into body-bg for seamless transition */}
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-body-bg" />
