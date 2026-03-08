@@ -1,10 +1,20 @@
+'use client';
+
 import Link from 'next/link';
 
 export function Header({ minimal = false }: { minimal?: boolean }) {
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-[10px] border-b border-border">
       <div className="max-w-[1400px] mx-auto px-15 py-5 flex items-center max-md:px-6 max-md:py-4 max-[992px]:px-10">
-        <Link href="/" className="font-display text-[19px] font-semibold tracking-[0.08em] text-primary no-underline">
+        <Link
+          href="/"
+          onClick={handleLogoClick}
+          className="font-display text-[19px] font-semibold tracking-[0.08em] text-primary no-underline"
+        >
           Young Cosmed
         </Link>
         {!minimal && (
