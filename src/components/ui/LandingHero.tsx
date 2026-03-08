@@ -4,9 +4,9 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const heroImages = [
-  '/images/랜딩 1..png',
+  '/images/랜딩 1번.png',
   '/images/랜딩 2..jpg',
-  '/images/랜딩 3..png',
+  '/images/랜딩 3번 최종.jpg',
   '/images/랜딩 4..jpg',
 ];
 
