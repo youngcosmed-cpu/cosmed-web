@@ -74,25 +74,34 @@ export function LandingHero() {
           <br />
           premium Korean products, delivered to 30+ countries.
         </p>
-        <div
-          style={{ animation: 'fadeSlideUp 0.8s ease-out 0.45s both' }}
-        >
-          <a
-            href="#products"
-            className="inline-flex items-center justify-center px-14 py-5 bg-primary text-white text-base font-semibold tracking-[0.04em] no-underline hover:bg-primary-hover transition-colors"
-          >
-            Browse Products
-          </a>
-        </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 max-md:hidden"
+      {/* Scroll down indicator */}
+      <a
+        href="#products"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 group cursor-pointer no-underline"
         style={{ animation: 'fadeIn 1s ease-out 1s both' }}
       >
-        <span className="block w-px h-8 bg-primary/30 animate-pulse" />
-      </div>
+        <span className="text-[11px] font-body font-medium tracking-[0.15em] uppercase text-primary/50 group-hover:text-primary/80 transition-colors">
+          Scroll
+        </span>
+        <svg
+          width="20"
+          height="28"
+          viewBox="0 0 20 28"
+          fill="none"
+          className="text-primary/40 group-hover:text-primary/70 transition-colors animate-bounce"
+          style={{ animationDuration: '2s' }}
+        >
+          <path
+            d="M10 4 L10 22 M4 16 L10 22 L16 16"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </a>
     </section>
   );
 }
