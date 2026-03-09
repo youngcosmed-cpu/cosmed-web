@@ -65,28 +65,19 @@ async function loadFonts(): Promise<{ regular: string; bold: string }> {
 }
 
 /* ── Stamp image cache ── */
-let stampCache: { company: string; ceo: string } | null = null;
+let stampCache: string | null = null;
 
-async function loadStampImages(): Promise<{ company: string; ceo: string }> {
+async function loadStampImage(): Promise<string> {
   if (stampCache) return stampCache;
 
-  const toDataUrl = async (path: string) => {
-    const buf = await fetch(path).then((r) => r.arrayBuffer());
-    const bytes = new Uint8Array(buf);
-    const chunks: string[] = [];
-    const CHUNK = 8192;
-    for (let i = 0; i < bytes.length; i += CHUNK) {
-      chunks.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
-    }
-    return 'data:image/png;base64,' + btoa(chunks.join(''));
-  };
-
-  const [company, ceo] = await Promise.all([
-    toDataUrl('/stamps/company-stamp.png'),
-    toDataUrl('/stamps/ceo-stamp.png'),
-  ]);
-
-  stampCache = { company, ceo };
+  const buf = await fetch('/stamps/youngcosmed.png').then((r) => r.arrayBuffer());
+  const bytes = new Uint8Array(buf);
+  const chunks: string[] = [];
+  const CHUNK = 8192;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    chunks.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
+  }
+  stampCache = 'data:image/png;base64,' + btoa(chunks.join(''));
   return stampCache;
 }
 
@@ -100,9 +91,9 @@ function formatCurrency(num: number): string {
 export async function generateInvoicePdf(
   data: InvoicePdfData,
 ): Promise<Blob> {
-  const [fonts, stamps] = await Promise.all([
+  const [fonts, stamp] = await Promise.all([
     loadFonts(),
-    data.type === 'CI' ? loadStampImages() : Promise.resolve(null),
+    loadStampImage(),
   ]);
 
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -300,16 +291,12 @@ export async function generateInvoicePdf(
   sigY += 4.5;
   doc.text(COMPANY_INFO.company, pageWidth - margin, sigY, { align: 'right' });
 
-  if (data.type === 'CI' && stamps) {
-    const stampSize = 30;
-    const ceoW = 36;
-    const ceoH = 18;
-    const stampX = pageWidth - margin - stampSize + 5;
+  {
+    const stampW = 50;
+    const stampH = 13;
+    const stampX = pageWidth - margin - stampW;
     const stampY = sigY + 3;
-    const ceoX = stampX - ceoW - 2;
-    const ceoY = stampY + (stampSize - ceoH) / 2;
-    doc.addImage(stamps.ceo, 'PNG', ceoX, ceoY, ceoW, ceoH);
-    doc.addImage(stamps.company, 'PNG', stampX, stampY, stampSize, stampSize);
+    doc.addImage(stamp, 'PNG', stampX, stampY, stampW, stampH);
   }
 
   y = Math.max(payY, sigY + 35);
