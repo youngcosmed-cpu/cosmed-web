@@ -16,7 +16,6 @@ export default function InvoicesPage() {
 
   const handleEdit = () => {
     setMode('edit');
-    setPreviewData(null);
   };
 
   return (
@@ -25,6 +24,7 @@ export default function InvoicesPage() {
         <InvoiceForm
           onGenerate={handleGenerate}
           isLoading={false}
+          initialData={previewData}
         />
       ) : previewData ? (
         <InvoicePreview data={previewData} onEdit={handleEdit} />
