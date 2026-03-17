@@ -5,6 +5,7 @@ import {
   generateInvoicePdf,
   type InvoicePdfData,
 } from '@/lib/invoice/generate-invoice-pdf';
+import { generateInvoiceExcel } from '@/lib/invoice/generate-invoice-excel';
 
 interface InvoicePreviewProps {
   data: InvoicePdfData;
@@ -41,6 +42,18 @@ export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
     a.href = blobUrl;
     a.download = filename;
     a.click();
+  };
+
+  const handleExcelDownload = () => {
+    const dateStr = new Date().toISOString().split('T')[0];
+    const filename = `${data.type}_${data.buyerName || 'invoice'}_${dateStr}.xlsx`;
+    const blob = generateInvoiceExcel(data);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const handlePrint = () => {
@@ -88,7 +101,14 @@ export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
             onClick={handleDownload}
             disabled={!blobUrl}
           >
-            다운로드
+            PDF
+          </button>
+          <button
+            type="button"
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            onClick={handleExcelDownload}
+          >
+            Excel
           </button>
           <button
             type="button"
