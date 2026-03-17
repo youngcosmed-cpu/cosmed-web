@@ -21,25 +21,39 @@ interface CiFields {
 interface InvoiceFormProps {
   onGenerate: (data: InvoicePdfData) => Promise<void>;
   isLoading: boolean;
+  initialData?: InvoicePdfData | null;
 }
 
 import { useState } from 'react';
 
-export default function InvoiceForm({ onGenerate, isLoading }: InvoiceFormProps) {
-  const [invoiceType, setInvoiceType] = useState<'PI' | 'CI'>('PI');
-  const [buyer, setBuyer] = useState({ name: '', address: '', contact: '' });
-  const [items, setItems] = useState<FormItem[]>([
-    { product: '', qty: '', price: '' },
-  ]);
-  const [shipping, setShipping] = useState({ method: '', cost: '' });
+export default function InvoiceForm({ onGenerate, isLoading, initialData }: InvoiceFormProps) {
+  const [invoiceType, setInvoiceType] = useState<'PI' | 'CI'>(initialData?.type ?? 'PI');
+  const [buyer, setBuyer] = useState({
+    name: initialData?.buyerName ?? '',
+    address: initialData?.buyerAddress ?? '',
+    contact: initialData?.buyerContact ?? '',
+  });
+  const [items, setItems] = useState<FormItem[]>(
+    initialData?.items.length
+      ? initialData.items.map((item) => ({
+          product: item.productName,
+          qty: String(item.quantity),
+          price: String(item.unitPrice),
+        }))
+      : [{ product: '', qty: '', price: '' }],
+  );
+  const [shipping, setShipping] = useState({
+    method: initialData?.shippingMethod ?? '',
+    cost: initialData?.shippingCost ? String(initialData.shippingCost) : '',
+  });
   const [ciFields, setCiFields] = useState<CiFields>({
-    portOfLoading: 'KOREA',
-    destination: '',
-    width: '',
-    height: '',
-    depth: '',
-    weight: '',
-    cartons: '',
+    portOfLoading: initialData?.ciFields?.portOfLoading ?? 'KOREA',
+    destination: initialData?.ciFields?.destination ?? '',
+    width: initialData?.ciFields?.width ?? '',
+    height: initialData?.ciFields?.height ?? '',
+    depth: initialData?.ciFields?.depth ?? '',
+    weight: initialData?.ciFields?.weight ?? '',
+    cartons: initialData?.ciFields?.cartons ?? '',
   });
 
   const getSubtotal = (item: FormItem) => {
