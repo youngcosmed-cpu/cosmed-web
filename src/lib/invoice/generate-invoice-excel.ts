@@ -83,15 +83,12 @@ export function generateInvoiceExcel(data: InvoicePdfData): Blob {
   rows.push([null, null, null, 'TOTAL', data.total]);
   rows.push([]);
 
-  /* ── Payment Terms ── */
-  rows.push(['Payment Terms']);
-  rows.push([`Payment: ${BANK_INFO.payment}`]);
+  /* ── Payment Terms (left) + Signature Block (right) ── */
+  rows.push(['Payment Terms', null, null, `${BANK_INFO.holder}, CEO`]);
+  rows.push([`Payment: ${BANK_INFO.payment}`, null, null, COMPANY_INFO.company]);
   rows.push([`Bank: ${BANK_INFO.bank}`]);
   rows.push([`A/C: ${BANK_INFO.account}`]);
   rows.push([`Swift: ${BANK_INFO.swift}`]);
-  rows.push([]);
-  rows.push([null, null, null, `${BANK_INFO.holder}, CEO`]);
-  rows.push([null, null, null, COMPANY_INFO.company]);
 
   const ws = XLSX.utils.aoa_to_sheet(rows);
 
