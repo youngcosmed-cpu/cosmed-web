@@ -70,7 +70,7 @@ let stampCache: string | null = null;
 async function loadStampImage(): Promise<string> {
   if (stampCache) return stampCache;
 
-  const buf = await fetch('/stamps/youngcosmed.png').then((r) => r.arrayBuffer());
+  const buf = await fetch('/images/코스메드 도장_transparent.png').then((r) => r.arrayBuffer());
   const bytes = new Uint8Array(buf);
   const chunks: string[] = [];
   const CHUNK = 8192;
@@ -292,8 +292,8 @@ export async function generateInvoicePdf(
   doc.text(COMPANY_INFO.company, pageWidth - margin, sigY, { align: 'right' });
 
   {
-    const stampW = 50;
-    const stampH = 13;
+    const stampW = 40;
+    const stampH = 22;
     const stampX = pageWidth - margin - stampW;
     const stampY = sigY + 3;
     doc.addImage(stamp, 'PNG', stampX, stampY, stampW, stampH);
