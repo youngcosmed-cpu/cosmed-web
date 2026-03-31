@@ -25,6 +25,13 @@ interface InvoiceFormProps {
 }
 
 import { useState } from 'react';
+import { useSavedBuyers } from '@/hooks/queries/use-saved-buyers';
+import {
+  useCreateSavedBuyer,
+  useUpdateSavedBuyer,
+} from '@/hooks/mutations/use-saved-buyer-mutations';
+import BuyerCombobox from './BuyerCombobox';
+import SavedBuyerManager from './SavedBuyerManager';
 
 export default function InvoiceForm({ onGenerate, isLoading, initialData }: InvoiceFormProps) {
   const [invoiceType, setInvoiceType] = useState<'PI' | 'CI'>(initialData?.type ?? 'PI');
@@ -55,6 +62,37 @@ export default function InvoiceForm({ onGenerate, isLoading, initialData }: Invo
     weight: initialData?.ciFields?.weight ?? '',
     cartons: initialData?.ciFields?.cartons ?? '',
   });
+  const [showBuyerManager, setShowBuyerManager] = useState(false);
+
+  const { data: savedBuyers = [], isLoading: buyersLoading } = useSavedBuyers();
+  const createBuyer = useCreateSavedBuyer();
+  const updateBuyer = useUpdateSavedBuyer();
+
+  const handleSaveBuyer = () => {
+    if (!buyer.name.trim()) {
+      alert('바이어 이름을 입력해주세요');
+      return;
+    }
+    const existing = savedBuyers.find(
+      (b) => b.name.toLowerCase() === buyer.name.trim().toLowerCase(),
+    );
+    if (existing) {
+      if (confirm(`"${existing.name}" 이(가) 이미 존재합니다. 덮어쓰시겠습니까?`)) {
+        updateBuyer.mutate({
+          id: existing.id,
+          name: buyer.name.trim(),
+          address: buyer.address,
+          contact: buyer.contact,
+        });
+      }
+    } else {
+      createBuyer.mutate({
+        name: buyer.name.trim(),
+        address: buyer.address,
+        contact: buyer.contact,
+      });
+    }
+  };
 
   const getSubtotal = (item: FormItem) => {
     const qty = parseFloat(item.qty) || 0;
@@ -150,7 +188,33 @@ export default function InvoiceForm({ onGenerate, isLoading, initialData }: Invo
 
       {/* Buyer Info */}
       <section className="rounded-xl border border-gray-200 bg-white p-5">
-        <h3 className="mb-4 text-sm font-semibold text-gray-900">바이어 정보</h3>
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-gray-900">바이어 정보</h3>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+              onClick={handleSaveBuyer}
+              disabled={createBuyer.isPending || updateBuyer.isPending}
+            >
+              주소록에 저장
+            </button>
+            <button
+              type="button"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100"
+              onClick={() => setShowBuyerManager(true)}
+            >
+              관리
+            </button>
+          </div>
+        </div>
+        <BuyerCombobox
+          savedBuyers={savedBuyers}
+          isLoading={buyersLoading}
+          onSelect={(b) =>
+            setBuyer({ name: b.name, address: b.address, contact: b.contact })
+          }
+        />
         <div className="grid gap-4 sm:grid-cols-1">
           <div>
             <label className="mb-1 block text-xs text-gray-500">이름/회사</label>
@@ -459,6 +523,13 @@ export default function InvoiceForm({ onGenerate, isLoading, initialData }: Invo
           US$ {formatCurrency(grandTotal)}
         </span>
       </div>
+
+      {showBuyerManager && (
+        <SavedBuyerManager
+          savedBuyers={savedBuyers}
+          onClose={() => setShowBuyerManager(false)}
+        />
+      )}
 
       {/* Generate Button */}
       <div className="flex justify-end">

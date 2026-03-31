@@ -21,4 +21,7 @@ export const queryKeys = {
       ['inquiries', 'list', params] as const,
     detail: (id: number) => ['inquiries', 'detail', id] as const,
   },
+  savedBuyers: {
+    all: ['saved-buyers'] as const,
+  },
 } as const;
