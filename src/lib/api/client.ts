@@ -80,7 +80,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    const isAuthEndpoint = originalRequest.url?.startsWith('/auth/');
+    const isAuthEndpoint =
+      originalRequest.url === '/auth/login' ||
+      originalRequest.url === '/auth/refresh' ||
+      originalRequest.url === '/auth/logout';
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
 
