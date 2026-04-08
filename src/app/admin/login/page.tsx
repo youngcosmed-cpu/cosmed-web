@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import axios from 'axios';
@@ -9,7 +9,6 @@ import { api, setAccessToken } from '@/lib/api/client';
 import { Header } from '@/components/layout/Header';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl');
   const [email, setEmail] = useState('');
@@ -24,9 +23,13 @@ function LoginForm() {
 
     try {
       const { data } = await api.post('/auth/login', { email, password });
+      if (typeof data?.accessToken !== 'string' || !data.accessToken) {
+        setError('서버 응답이 올바르지 않습니다. 잠시 후 다시 시도하세요.');
+        return;
+      }
       setAccessToken(data.accessToken);
       const safeReturnUrl = returnUrl?.startsWith('/admin') ? returnUrl : '/admin';
-      router.replace(safeReturnUrl);
+      window.location.assign(safeReturnUrl);
     } catch (err) {
       if (axios.isAxiosError(err)) {
         const status = err.response?.status;
