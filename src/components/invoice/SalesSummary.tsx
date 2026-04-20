@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useInvoices, useInvoiceStats } from '@/hooks/queries/use-invoices';
 import { useDeleteInvoice } from '@/hooks/mutations/use-invoice-mutations';
 import { useToast } from '@/hooks/use-toast';
+import { generateInvoicePdf } from '@/lib/invoice/generate-invoice-pdf';
+import { generateInvoiceExcel } from '@/lib/invoice/generate-invoice-excel';
 import type { InvoiceMonthlyPoint, InvoiceRecord } from '@/types/invoice';
 
 type RangeKey = 'all' | 'thisMonth' | 'thisYear' | 'last12';
@@ -127,17 +129,164 @@ function MonthlyChart({ data }: { data: InvoiceMonthlyPoint[] }) {
   );
 }
 
+function InvoiceViewModal({
+  invoice,
+  onClose,
+}: {
+  invoice: InvoiceRecord;
+  onClose: () => void;
+}) {
+  const [blobUrl, setBlobUrl] = useState<string | null>(null);
+  const printIframeRef = useRef<HTMLIFrameElement | null>(null);
+
+  const pdfData = useMemo(
+    () => ({
+      type: invoice.type,
+      buyerName: invoice.buyerName,
+      buyerAddress: invoice.buyerAddress,
+      buyerContact: invoice.buyerContact,
+      items: invoice.items,
+      shippingMethod: invoice.shippingMethod,
+      shippingCost: invoice.shippingCost,
+      total: invoice.total,
+      ciFields: invoice.ciFields ?? undefined,
+    }),
+    [invoice],
+  );
+
+  useEffect(() => {
+    let url: string | null = null;
+    generateInvoicePdf(pdfData).then((blob) => {
+      url = URL.createObjectURL(blob);
+      setBlobUrl(url);
+    });
+    return () => {
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [pdfData]);
+
+  const handleDownload = () => {
+    if (!blobUrl) return;
+    const dateStr = new Date(invoice.issuedAt).toISOString().split('T')[0];
+    const filename = `${invoice.type}_${invoice.buyerName || 'invoice'}_${dateStr}.pdf`;
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    a.click();
+  };
+
+  const handleExcelDownload = () => {
+    const dateStr = new Date(invoice.issuedAt).toISOString().split('T')[0];
+    const filename = `${invoice.type}_${invoice.buyerName || 'invoice'}_${dateStr}.xlsx`;
+    const blob = generateInvoiceExcel(pdfData);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePrint = () => {
+    if (!blobUrl) return;
+    const iframe = printIframeRef.current;
+    if (!iframe) return;
+    iframe.src = blobUrl;
+    iframe.onload = () => {
+      iframe.contentWindow?.print();
+    };
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col mx-4">
+        <div className="flex items-center justify-between p-4 border-b border-border-light">
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold ${
+                invoice.type === 'CI'
+                  ? 'bg-admin-dark text-white'
+                  : 'bg-beige text-admin-dark'
+              }`}
+            >
+              {invoice.type}
+            </span>
+            <span className="font-body text-sm font-semibold text-admin-dark">
+              {invoice.buyerName}
+            </span>
+            <span className="text-xs text-text-muted">
+              {formatDate(invoice.issuedAt)}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownload}
+              disabled={!blobUrl}
+              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-40 cursor-pointer"
+            >
+              PDF
+            </button>
+            <button
+              onClick={handleExcelDownload}
+              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 cursor-pointer"
+            >
+              Excel
+            </button>
+            <button
+              onClick={handlePrint}
+              disabled={!blobUrl}
+              className="rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-gray-800 disabled:opacity-40 cursor-pointer"
+            >
+              인쇄
+            </button>
+            <button
+              onClick={onClose}
+              className="ml-1 text-text-muted hover:text-admin-dark transition-colors cursor-pointer text-lg leading-none"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-hidden p-4">
+          {blobUrl ? (
+            <iframe
+              src={blobUrl}
+              className="h-[70vh] w-full rounded-lg border border-gray-200"
+              title="Invoice Preview"
+            />
+          ) : (
+            <div className="flex h-[70vh] items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
+              <span className="text-sm text-gray-400">PDF 생성 중...</span>
+            </div>
+          )}
+        </div>
+        <iframe ref={printIframeRef} className="hidden" title="Print Frame" />
+      </div>
+    </div>
+  );
+}
+
 function InvoiceRow({
   invoice,
   onDelete,
+  onView,
   isDeleting,
 }: {
   invoice: InvoiceRecord;
   onDelete: (id: number) => void;
+  onView: (invoice: InvoiceRecord) => void;
   isDeleting: boolean;
 }) {
   return (
-    <tr className="border-b border-border-light hover:bg-bg-light transition-colors">
+    <tr
+      className="border-b border-border-light hover:bg-bg-light transition-colors cursor-pointer"
+      onClick={() => onView(invoice)}
+    >
       <td className="py-3.5 px-4">
         <span
           className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold ${
@@ -163,7 +312,8 @@ function InvoiceRow({
       </td>
       <td className="py-3.5 px-4 text-right">
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (!confirm('이 매출 기록을 삭제하시겠습니까?')) return;
             onDelete(invoice.id);
           }}
@@ -193,6 +343,7 @@ export default function SalesSummary() {
     ...rangeParams,
     type: typeFilter === 'all' ? undefined : typeFilter,
   });
+  const [viewingInvoice, setViewingInvoice] = useState<InvoiceRecord | null>(null);
   const deleteMutation = useDeleteInvoice();
   const toast = useToast();
 
@@ -377,6 +528,7 @@ export default function SalesSummary() {
                       key={inv.id}
                       invoice={inv}
                       onDelete={handleDelete}
+                      onView={setViewingInvoice}
                       isDeleting={
                         deleteMutation.isPending &&
                         deleteMutation.variables === inv.id
@@ -390,7 +542,11 @@ export default function SalesSummary() {
             {/* Mobile Cards */}
             <div className="sm:hidden flex flex-col divide-y divide-border-light">
               {invoices.map((inv) => (
-                <div key={inv.id} className="p-4 flex flex-col gap-2">
+                <div
+                  key={inv.id}
+                  className="p-4 flex flex-col gap-2 cursor-pointer active:bg-bg-light transition-colors"
+                  onClick={() => setViewingInvoice(inv)}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span
@@ -420,7 +576,8 @@ export default function SalesSummary() {
                   </div>
                   <div className="flex justify-end">
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         if (!confirm('이 매출 기록을 삭제하시겠습니까?')) return;
                         handleDelete(inv.id);
                       }}
@@ -451,6 +608,13 @@ export default function SalesSummary() {
           </>
         )}
       </div>
+
+      {viewingInvoice && (
+        <InvoiceViewModal
+          invoice={viewingInvoice}
+          onClose={() => setViewingInvoice(null)}
+        />
+      )}
     </div>
   );
 }
