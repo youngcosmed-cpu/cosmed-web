@@ -24,4 +24,11 @@ export const queryKeys = {
   savedBuyers: {
     all: ['saved-buyers'] as const,
   },
+  invoices: {
+    all: ['invoices'] as const,
+    list: (params?: { type?: 'PI' | 'CI'; from?: string; to?: string }) =>
+      ['invoices', 'list', params] as const,
+    stats: (params?: { from?: string; to?: string }) =>
+      ['invoices', 'stats', params] as const,
+  },
 } as const;
