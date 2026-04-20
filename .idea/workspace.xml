@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="87c18067-64d6-4992-a536-ee96c1a2c084" name="변경" comment="수정가능">
+    <list default="true" id="87c18067-64d6-4992-a536-ee96c1a2c084" name="변경" comment="도장 추가 ux">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/invoice/generate-invoice-pdf.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/invoice/generate-invoice-pdf.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +46,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;change2&quot;,
     &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
@@ -94,6 +93,8 @@
       <workItem from="1773734840748" duration="1566000" />
       <workItem from="1773736420296" duration="1128000" />
       <workItem from="1774263256197" duration="2201000" />
+      <workItem from="1775127761118" duration="2000" />
+      <workItem from="1775180264915" duration="1000" />
     </task>
     <task id="LOCAL-00001" summary="엑셀">
       <option name="closed" value="true" />
@@ -111,7 +112,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773737200184</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="도장 추가 ux">
+      <option name="closed" value="true" />
+      <created>1774325912659</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1774325912659</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -120,6 +129,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="엑셀" />
     <MESSAGE value="수정가능" />
-    <option name="LAST_COMMIT_MESSAGE" value="수정가능" />
+    <MESSAGE value="도장 추가 ux" />
+    <option name="LAST_COMMIT_MESSAGE" value="도장 추가 ux" />
   </component>
 </project>

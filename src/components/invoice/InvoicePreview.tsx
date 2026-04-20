@@ -6,6 +6,8 @@ import {
   type InvoicePdfData,
 } from '@/lib/invoice/generate-invoice-pdf';
 import { generateInvoiceExcel } from '@/lib/invoice/generate-invoice-excel';
+import { useCreateInvoice } from '@/hooks/mutations/use-invoice-mutations';
+import { useToast } from '@/hooks/use-toast';
 
 interface InvoicePreviewProps {
   data: InvoicePdfData;
@@ -15,7 +17,10 @@ interface InvoicePreviewProps {
 export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [savedId, setSavedId] = useState<number | null>(null);
   const printIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const createInvoice = useCreateInvoice();
+  const toast = useToast();
 
   useEffect(() => {
     let url: string | null = null;
@@ -56,6 +61,30 @@ export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
     URL.revokeObjectURL(url);
   };
 
+  const handleSave = () => {
+    if (savedId || createInvoice.isPending) return;
+    createInvoice.mutate(
+      {
+        type: data.type,
+        buyerName: data.buyerName,
+        buyerAddress: data.buyerAddress,
+        buyerContact: data.buyerContact,
+        items: data.items,
+        shippingMethod: data.shippingMethod,
+        shippingCost: data.shippingCost,
+        total: data.total,
+        ciFields: data.ciFields,
+      },
+      {
+        onSuccess: (record) => {
+          setSavedId(record.id);
+          toast.success('매출 기록에 저장되었습니다');
+        },
+        onError: () => toast.error('저장에 실패했습니다'),
+      },
+    );
+  };
+
   const handlePrint = () => {
     if (!blobUrl) return;
     const iframe = printIframeRef.current;
@@ -94,7 +123,24 @@ export default function InvoicePreview({ data, onEdit }: InvoicePreviewProps) {
         >
           &larr; 수정하기
         </button>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap justify-end">
+          <button
+            type="button"
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+              savedId
+                ? 'border border-emerald-200 bg-emerald-50 text-emerald-700 cursor-default'
+                : 'border border-gray-900 bg-white text-gray-900 hover:bg-gray-900 hover:text-white disabled:opacity-50'
+            }`}
+            onClick={handleSave}
+            disabled={!!savedId || createInvoice.isPending}
+            title="이 인보이스의 매출액을 기록에 저장합니다"
+          >
+            {savedId
+              ? '✓ 저장됨'
+              : createInvoice.isPending
+                ? '저장 중...'
+                : '매출 기록 저장'}
+          </button>
           <button
             type="button"
             className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
