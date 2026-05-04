@@ -165,7 +165,7 @@ export function BrandForm({ brand }: Props) {
   const selectedCategories = categories.filter((c) => categoryIds.includes(c.id));
 
   return (
-    <div className="relative min-h-full pb-24">
+    <div className="relative min-h-full pb-24 max-sm:pb-32">
       <div className="mx-auto max-w-[800px] px-8 py-8 max-md:px-5">
         {/* Back button */}
         <button
@@ -458,7 +458,7 @@ export function BrandForm({ brand }: Props) {
       </div>
 
       {/* Fixed footer */}
-      <div className="fixed bottom-0 right-0 left-[224px] z-10 border-t-2 border-border-light bg-white px-8 py-4 max-lg:left-[196px] max-md:left-[182px] max-sm:left-0">
+      <div className="fixed bottom-0 right-0 left-[224px] z-10 border-t-2 border-border-light bg-white px-8 py-4 max-lg:left-[196px] max-md:left-[182px] max-sm:left-0 max-sm:bottom-12">
         <div className="mx-auto flex max-w-[800px] items-center justify-between">
           {errors.save && (
             <p className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-red-50 px-4 py-1.5 font-body text-sm text-red-500 border border-red-200">
