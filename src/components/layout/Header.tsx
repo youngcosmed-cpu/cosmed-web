@@ -1,10 +1,25 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { AboutModal } from '@/components/ui/AboutModal';
 
 export function Header({ minimal = false }: { minimal?: boolean }) {
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+
   const handleLogoClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    setTimeout(() => {
+      setIsAboutModalOpen(true);
+    }, 700);
   };
 
   return (
@@ -19,20 +34,25 @@ export function Header({ minimal = false }: { minimal?: boolean }) {
         </Link>
         {!minimal && (
           <>
-            <nav className="flex gap-12 ml-auto max-md:hidden max-[992px]:gap-8">
-              <a href="#products" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors">
+            <nav className="flex gap-12 ml-auto max-[992px]:gap-8 max-md:gap-4">
+              <a href="#products" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors max-md:hidden">
                 Products
               </a>
-              <a href="#about" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors">
-                About
+              <a
+                href="#about"
+                onClick={handleAboutClick}
+                className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors"
+              >
+                About us
               </a>
-              <a href="#contact" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors">
+              <a href="#contact" className="text-sm font-normal text-text-secondary no-underline hover:text-primary transition-colors max-md:hidden">
                 Contact
               </a>
             </nav>
           </>
         )}
       </div>
+      <AboutModal isOpen={isAboutModalOpen} onClose={() => setIsAboutModalOpen(false)} />
     </header>
   );
 }
