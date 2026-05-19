@@ -48,7 +48,7 @@ export function BrandDetail({ id }: { id: number }) {
     <div
       className="min-h-screen bg-white animate-[fadeIn_0.6s_ease-out]"
     >
-      <div className="max-w-[1400px] mx-auto px-15 pt-10 pb-20 max-lg:px-10 max-md:px-5 max-md:pt-6 max-md:pb-15">
+      <div className="max-w-[1400px] mx-auto px-15 pt-28 pb-20 max-lg:px-10 max-md:px-5 max-md:pt-24 max-md:pb-15">
         {/* Back Button */}
         <button
           onClick={() => router.back()}

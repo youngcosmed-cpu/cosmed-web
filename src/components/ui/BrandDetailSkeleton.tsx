@@ -1,7 +1,7 @@
 export function BrandDetailSkeleton() {
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-[1400px] mx-auto px-15 pt-10 pb-20 max-lg:px-10 max-md:px-5 max-md:pt-6 max-md:pb-15">
+      <div className="max-w-[1400px] mx-auto px-15 pt-28 pb-20 max-lg:px-10 max-md:px-5 max-md:pt-24 max-md:pb-15">
         {/* Back button skeleton */}
         <div className="h-4 w-32 bg-warm-gray rounded mb-10 max-md:mb-5 animate-pulse" />
 
