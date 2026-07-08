@@ -331,7 +331,7 @@ export function BrandForm({ brand }: Props) {
                 adjustDescriptionHeight();
               }}
               placeholder="브랜드/제품에 대한 자유로운 설명을 입력하세요"
-              className="w-full min-h-[180px] resize-none overflow-hidden rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-base text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
+              className="w-full min-h-[180px] resize-none overflow-hidden rounded-[10px] border-2 border-border-strong px-4 py-3.5 font-body text-xl leading-[1.8] text-center max-[992px]:text-lg max-md:text-base max-md:text-left text-admin-dark outline-none transition-colors placeholder:text-text-disabled focus:border-admin-dark"
             />
           </div>
 
