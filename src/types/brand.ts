@@ -13,12 +13,18 @@ export interface Product {
   sortOrder: number;
 }
 
+export interface BrandMedia {
+  type: 'image' | 'video';
+  url: string;
+}
+
 export interface Brand {
   id: number;
   name: string;
   description: string | null;
   imageUrl: string | null;
   certifications: string[];
+  media?: BrandMedia[];
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
@@ -32,6 +38,7 @@ export interface CreateBrandPayload {
   description?: string;
   imageUrl?: string | null;
   certifications?: string[];
+  media?: BrandMedia[];
   products: { name: string; description?: string; sortOrder?: number }[];
 }
 
@@ -41,6 +48,7 @@ export interface UpdateBrandPayload {
   description?: string;
   imageUrl?: string | null;
   certifications?: string[];
+  media?: BrandMedia[];
   products?: { name: string; description?: string; sortOrder?: number }[];
 }
 

@@ -10,8 +10,9 @@ import {
   useDeleteBrand,
 } from '@/hooks/mutations/use-brand-mutations';
 import { useUploadImage } from '@/hooks/mutations/use-upload-image';
+import { useUploadVideo } from '@/hooks/mutations/use-upload-video';
 import { useToast } from '@/hooks/use-toast';
-import type { Brand } from '@/types/brand';
+import type { Brand, BrandMedia } from '@/types/brand';
 
 interface Model {
   name: string;
@@ -35,6 +36,10 @@ export function BrandForm({ brand }: Props) {
   const deleteBrand = useDeleteBrand();
   const { upload, isUploading } = useUploadImage();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const extraImageUpload = useUploadImage();
+  const videoUpload = useUploadVideo();
+  const extraImageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const modelDescriptionRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
@@ -49,6 +54,8 @@ export function BrandForm({ brand }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(
     brand?.imageUrl ?? null,
   );
+  const [media, setMedia] = useState<BrandMedia[]>(brand?.media ?? []);
+  const isMediaUploading = extraImageUpload.isUploading || videoUpload.isUploading;
   const [certInput, setCertInput] = useState('');
   const [models, setModels] = useState<Model[]>(() => {
     if (brand?.products && brand.products.length > 0) {
@@ -91,6 +98,40 @@ export function BrandForm({ brand }: Props) {
     setModels((prev) => [...prev, { name: '', description: '' }]);
   };
 
+  const moveMedia = (index: number, direction: -1 | 1) => {
+    setMedia((prev) => {
+      const target = index + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
+  const removeMedia = (index: number) => {
+    setMedia((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleExtraImages = async (files: FileList) => {
+    for (const file of Array.from(files)) {
+      try {
+        const url = await extraImageUpload.upload(file);
+        setMedia((prev) => [...prev, { type: 'image', url }]);
+      } catch {
+        toast.error(`"${file.name}" 업로드에 실패했습니다`);
+      }
+    }
+  };
+
+  const handleVideo = async (file: File) => {
+    try {
+      const url = await videoUpload.upload(file);
+      setMedia((prev) => [...prev, { type: 'video', url }]);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '영상 업로드에 실패했습니다');
+    }
+  };
+
   const removeModel = (index: number) => {
     if (models.length > 1) {
       setModels((prev) => prev.filter((_, i) => i !== index));
@@ -126,6 +167,7 @@ export function BrandForm({ brand }: Props) {
           name: brandName.trim(),
           description: description.trim() || undefined,
           imageUrl,
+          media,
           certifications,
           products,
         });
@@ -135,6 +177,7 @@ export function BrandForm({ brand }: Props) {
           name: brandName.trim(),
           description: description.trim() || undefined,
           imageUrl,
+          media,
           certifications,
           products,
         });
@@ -263,7 +306,7 @@ export function BrandForm({ brand }: Props) {
           {/* Brand image */}
           <div>
             <label className="mb-2 block font-body text-base font-bold text-admin-dark">
-              브랜드 사진
+              대표 사진
             </label>
             <input
               ref={fileInputRef}
@@ -315,6 +358,127 @@ export function BrandForm({ brand }: Props) {
                   클릭하여 이미지 선택 (최대 20MB)
                 </span>
               </button>
+            )}
+          </div>
+
+          {/* Additional media */}
+          <div>
+            <label className="mb-1 block font-body text-base font-bold text-admin-dark">
+              추가 사진·영상
+            </label>
+            <p className="mb-3 font-body text-sm text-text-placeholder">
+              상세페이지 설명 위에 순서대로 표시됩니다 (사진 최대 20MB, 영상 mp4/webm/mov 최대 200MB)
+            </p>
+            <input
+              ref={extraImageInputRef}
+              type="file"
+              multiple
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              className="hidden"
+              onChange={async (e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) await handleExtraImages(files);
+                e.target.value = '';
+              }}
+            />
+            <input
+              ref={videoInputRef}
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) await handleVideo(file);
+                e.target.value = '';
+              }}
+            />
+            {media.length > 0 && (
+              <div className="mb-3 grid grid-cols-3 gap-3 max-md:grid-cols-2">
+                {media.map((item, index) => (
+                  <div
+                    key={item.url}
+                    className="relative aspect-square overflow-hidden rounded-[10px] border-2 border-border-light bg-bg-input"
+                  >
+                    {item.type === 'image' ? (
+                      <Image
+                        src={item.url}
+                        alt={`추가 사진 ${index + 1}`}
+                        fill
+                        sizes="200px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <>
+                        <video
+                          src={item.url}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          className="h-full w-full object-cover"
+                        />
+                        <span className="absolute left-2 top-2 rounded bg-admin-dark px-2 py-0.5 font-body text-xs font-semibold text-white">
+                          영상
+                        </span>
+                      </>
+                    )}
+                    <span className="absolute bottom-2 left-2 rounded bg-white/90 px-2 py-0.5 font-body text-xs font-semibold text-admin-dark">
+                      {index + 2}
+                    </span>
+                    <div className="absolute bottom-2 right-2 flex gap-1">
+                      <button
+                        type="button"
+                        onClick={() => moveMedia(index, -1)}
+                        disabled={index === 0}
+                        aria-label="앞으로 이동"
+                        className="flex h-6 w-6 items-center justify-center rounded bg-white/90 font-body text-xs text-admin-dark hover:bg-white transition-colors cursor-pointer border-none disabled:opacity-30 disabled:cursor-default"
+                      >
+                        &larr;
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveMedia(index, 1)}
+                        disabled={index === media.length - 1}
+                        aria-label="뒤로 이동"
+                        className="flex h-6 w-6 items-center justify-center rounded bg-white/90 font-body text-xs text-admin-dark hover:bg-white transition-colors cursor-pointer border-none disabled:opacity-30 disabled:cursor-default"
+                      >
+                        &rarr;
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeMedia(index)}
+                      aria-label="삭제"
+                      className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 font-body text-xs text-white hover:bg-red-600 transition-colors cursor-pointer border-none"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            {isMediaUploading ? (
+              <div className="flex h-14 items-center justify-center rounded-[10px] border-2 border-dashed border-border-strong bg-bg-input">
+                <span className="font-body text-sm text-text-placeholder">
+                  {videoUpload.isUploading ? '영상 업로드 중...' : '사진 업로드 중...'}
+                </span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => extraImageInputRef.current?.click()}
+                  className="rounded-[10px] border-2 border-dashed border-border-medium py-3 font-body text-sm font-semibold text-text-placeholder hover:border-text-placeholder hover:text-text-label transition-colors cursor-pointer bg-transparent"
+                >
+                  + 사진 추가
+                </button>
+                <button
+                  type="button"
+                  onClick={() => videoInputRef.current?.click()}
+                  className="rounded-[10px] border-2 border-dashed border-border-medium py-3 font-body text-sm font-semibold text-text-placeholder hover:border-text-placeholder hover:text-text-label transition-colors cursor-pointer bg-transparent"
+                >
+                  + 영상 추가
+                </button>
+              </div>
             )}
           </div>
 
@@ -488,7 +652,7 @@ export function BrandForm({ brand }: Props) {
             <button
               type="button"
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={isSaving || isMediaUploading}
               className="rounded-lg bg-admin-dark px-6 py-2.5 font-body text-sm font-semibold text-white hover:bg-admin-dark-hover transition-colors cursor-pointer border-none disabled:opacity-50"
             >
               {isSaving ? '저장 중...' : '저장하기'}

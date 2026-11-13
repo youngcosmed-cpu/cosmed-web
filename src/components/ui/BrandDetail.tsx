@@ -216,6 +216,34 @@ export function BrandDetail({ id }: { id: number }) {
               </div>
             )}
 
+            {/* Additional Media (2nd+ images/videos) */}
+            {brand.media && brand.media.length > 0 && (
+              <div className="max-w-[800px] mx-auto mb-16 flex flex-col gap-6 max-[992px]:mb-12 max-md:mb-10 max-md:gap-4">
+                {brand.media.map((item, idx) =>
+                  item.type === 'video' ? (
+                    <video
+                      key={item.url}
+                      src={item.url}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full bg-black"
+                    />
+                  ) : (
+                    <Image
+                      key={item.url}
+                      src={item.url}
+                      alt={`${brand.name} ${idx + 2}`}
+                      width={1200}
+                      height={1200}
+                      sizes="(max-width: 800px) 100vw, 800px"
+                      className="w-full h-auto"
+                    />
+                  ),
+                )}
+              </div>
+            )}
+
             {/* Brand Description */}
             {brand.description && (
               <div className="max-w-[800px] mx-auto mb-16 text-center max-[992px]:mb-12 max-md:mb-10 max-md:text-left">
