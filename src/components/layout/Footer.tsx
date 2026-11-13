@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-primary border-t border-white/[0.08] pt-15 pb-10">
+    <footer className="bg-[#1F1F21] border-t border-white/[0.08] pt-15 pb-10">
       <div className="max-w-[1400px] mx-auto px-15 max-md:px-6 max-[992px]:px-10">
         {/* Top */}
         <div className="flex justify-between items-start max-md:flex-col max-md:gap-6">
@@ -55,6 +55,19 @@ export function Footer() {
             <span className="font-body text-[13px] font-normal text-text-muted">
               #1603, 118, Seongsui-ro, Seongdong-gu, Seoul
             </span>
+          </div>
+          <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
+            <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
+              WhatsApp
+            </span>
+            <a
+              href="https://wa.me/821063040851"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-body text-[13px] font-normal text-text-muted no-underline hover:text-white transition-colors"
+            >
+              +82 10 6304 0851
+            </a>
           </div>
           <div className="flex gap-3 items-baseline max-md:flex-col max-md:gap-0.5">
             <span className="font-body text-xs font-light text-white/35 tracking-[0.02em] whitespace-nowrap min-w-[100px] max-md:min-w-0">
