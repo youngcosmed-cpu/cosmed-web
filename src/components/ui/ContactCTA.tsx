@@ -1,6 +1,6 @@
 export function ContactCTA() {
   return (
-    <section className="py-30 bg-primary max-md:py-20" id="contact">
+    <section className="py-30 bg-[#1F1F21] max-md:py-20" id="contact">
       <div className="max-w-[1400px] mx-auto px-15 max-md:px-6 max-[992px]:px-10 text-center">
         <h2 className="font-display text-4xl font-semibold tracking-[-0.01em] text-white mb-5 max-md:text-[28px]">
           Ready to Source?
